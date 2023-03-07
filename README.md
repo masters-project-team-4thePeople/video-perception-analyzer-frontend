@@ -1,1 +1,1 @@
-# video-perception-analyser-frontend
+# VPAFrontend
