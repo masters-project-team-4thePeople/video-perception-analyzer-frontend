@@ -28,7 +28,6 @@ import video2 from "../assets/videos/video2.mp4";
 import video3 from "../assets/videos/video3.mp4";
 import video4 from "../assets/videos/video4.mp4";
 import video5 from "../assets/videos/video5.mp4";
-import video6 from "../assets/videos/video6.mp4";
 
 
 
@@ -63,5 +62,4 @@ export default {
   video4,
   video1,
   video5,
-  video6,
 };
