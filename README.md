@@ -1,6 +1,6 @@
 # video-perception-analyser-frontend
 
-## How to run
+## How to run the application
 * Clone the Repository
 * Run yarn install
 * Run yarn start
