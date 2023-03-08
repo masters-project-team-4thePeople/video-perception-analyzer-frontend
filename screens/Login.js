@@ -1,18 +1,22 @@
 import { Text, View, Image, TextInput, useWindowDimensions, StyleSheet, Pressable, Alert } from 'react-native'
 import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { CustomButton, CustomInput } from '../components';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { signInWithEmailAndPassword, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CredentialsContext } from '../components/CredentialsContext';
 
 const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const authCurr = getAuth();
+
+    const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
     
     const onSignInPressed = async() => {
         signInWithEmailAndPassword(auth, username, password)
@@ -21,9 +25,10 @@ const Login = () => {
           if(!user.user.emailVerified) {
             Alert.alert("Please verify your email to login");
           } else {
-            navigation.navigate('Home', {
-              userDetails: user.user
-            })
+            persistLogin({...user.user});
+            // navigation.navigate('Home', {
+            //   userDetails: user.user
+            // })
           }
         }, error => {
             if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -48,6 +53,16 @@ const Login = () => {
 
     const loginWithFacebook = () => this.openURL('http://localhost:3000/auth/facebook');
     const loginWithGoogle = () => this.openURL('http://localhost:3000/auth/google');
+
+    const persistLogin = (credentials) => {
+      AsyncStorage.setItem('vpaCredentials', JSON.stringify(credentials))
+      .then(() => {
+        setStoredCredentials(credentials);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+    }
 
     return (
       <ScrollView>

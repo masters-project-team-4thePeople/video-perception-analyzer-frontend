@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Image, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { MenuProvider, Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CredentialsContext } from '../components/CredentialsContext';
 
 const HomeHeader = ({ userName, onSearch }) => {
   const openMenu = () => {
@@ -25,9 +26,18 @@ const HomeHeader = ({ userName, onSearch }) => {
         userDetails: {}
       });
     } else {
-      navigation.navigate('Login');
+      clearLogin();
     }
   }
+  const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+  const clearLogin = () => {
+    AsyncStorage.removeItem('vpaCredentials')
+    .then(() => {
+      setStoredCredentials("")}
+    )
+    .catch((error) => console.error(error));
+  }
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <View

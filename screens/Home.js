@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, SafeAreaView, FlatList, ScrollView, Dimensions } from "react-native";
 
 import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
 import { COLORS, NFTData } from "../constants";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { CredentialsContext } from '../components/CredentialsContext';
 
 const Home = ({route}) => {
   const [nftData, setNftData] = useState(NFTData);
@@ -12,6 +15,17 @@ const Home = ({route}) => {
   const [positionEnd, setPositionEnd] = useState(null)
   const {width} = Dimensions.get("window");
   const THRESHOLD = 1800;
+
+  const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+  const {user} = storedCredentials;
+
+  const clearLogin = () => {
+    AsyncStorage.removeItem('vpaCredentials')
+    .then(() => {
+      setStoredCredentials("")}
+    )
+    .catch((error) => console.error(error));
+  }
 
   const handleSearch = (value) => {
     if (value.length === 0) {
@@ -57,7 +71,7 @@ const Home = ({route}) => {
             renderItem={({ item }) => <NFTCard data={item} paused={paused}/>}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={<HomeHeader userName={route.params.userDetails} onSearch={handleSearch}/>}
+            ListHeaderComponent={<HomeHeader userName="Swathi" onSearch={handleSearch}/>}
           />
         </View>
 

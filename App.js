@@ -1,26 +1,28 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import Home from './screens/Home';
-import Login from './screens/Login';
-import Details from './screens/Details';
-import SignUp from './screens/SignUp';
-import ResetPassword from './screens/ResetPassword';
+// import Home from './screens/Home';
+// import Login from './screens/Login';
+// import Details from './screens/Details';
+// import SignUp from './screens/SignUp';
+// import ResetPassword from './screens/ResetPassword';
+import RootStack from './navigators/RootStack';
 import { MenuProvider } from 'react-native-popup-menu';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { CredentialsContext } from './components/CredentialsContext';
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
-const theme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: "white"
-  }
-}
+// const theme = {
+//   ...DefaultTheme,
+//   colors: {
+//     ...DefaultTheme.colors,
+//     background: "white"
+//   }
+// }
 
 const App = () => {
   const [appReady, setAppReady] = useState(false);
@@ -47,26 +49,30 @@ const App = () => {
     .catch(error=> console.error(error))
   }
 
-  if(!loaded) return null;
+  // if(!loaded) return null;
+
   if(!appReady) {
     return <AppLoading
     startAsync={checkLoginCredentials}
-    onFinish={()=>setAppReady(true)}
-    onError={console.warn}
+    onFinish={() => setAppReady(true)}
+    onError={console.log("App not ready")}
     />
   }
   return (
-    <MenuProvider>
-      <NavigationContainer theme={theme}>
-        <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Login">
-          <Stack.Screen name='Login' component={Login}/>
-          <Stack.Screen name='SignUp' component={SignUp}/>
-          <Stack.Screen name='Home' component={Home}/>
-          <Stack.Screen name='Details' component={Details}/>
-          <Stack.Screen name='ResetPassword' component={ResetPassword}/>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </MenuProvider>
+    <CredentialsContext.Provider value={{storedCredentials, setStoredCredentials}}>
+      <MenuProvider>
+        <RootStack/>
+        {/* <NavigationContainer theme={theme}>
+          <Stack.Navigator screenOptions={{headerShown: false}} initialRouteName="Login">
+            <Stack.Screen name='Login' component={Login}/>
+            <Stack.Screen name='SignUp' component={SignUp}/>
+            <Stack.Screen name='Home' component={Home}/>
+            <Stack.Screen name='Details' component={Details}/>
+            <Stack.Screen name='ResetPassword' component={ResetPassword}/>
+          </Stack.Navigator>
+        </NavigationContainer> */}
+      </MenuProvider>
+    </CredentialsContext.Provider>
   );
 }
 
