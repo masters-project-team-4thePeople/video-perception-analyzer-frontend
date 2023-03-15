@@ -11,11 +11,11 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building.."
-                sh '''
-                npm install --global yarn
-                cd video-perception-analyser-frontend
-                yarn install
-                '''
+                // sh '''
+                // npm install --global yarn
+                // cd video-perception-analyser-frontend
+                // yarn install
+                // '''
             }
         }
         stage('Test') {
