@@ -1,0 +1,37 @@
+pipeline {
+    // agent { 
+    //     node {
+    //         label 'docker-agent-python'
+    //         }
+    //   }
+    triggers {
+        pollSCM '* * * * *'
+    }
+    stages { 
+        stage('Build') {
+            steps {
+                echo "Building.."
+                sh '''
+                npm install --global yarn
+                cd video-perception-analyser-frontend
+                yarn install
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                echo "Testing.."
+                // sh ''' 
+                // '''
+            }
+        }
+        stage('Deliver') {
+            steps {
+                echo 'Deliver....'
+                sh '''
+                echo "doing delivery stuff.."
+                '''
+            }
+        }
+    }
+}
