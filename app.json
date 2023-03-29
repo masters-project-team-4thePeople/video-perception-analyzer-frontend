@@ -12,7 +12,9 @@
       "backgroundColor": "#ffffff"
     },
     "packagerOpts": {
-      "sourceExts": ["cjs"]
+      "sourceExts": [
+        "cjs"
+      ]
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,7 +23,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "VPA"
     },
     "android": {
       "adaptiveIcon": {

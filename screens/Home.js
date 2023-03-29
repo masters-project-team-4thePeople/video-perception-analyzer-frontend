@@ -1,9 +1,7 @@
 import React, { useState, useContext } from "react";
-import { View, SafeAreaView, FlatList, ScrollView, Dimensions } from "react-native";
-
+import { View, SafeAreaView, FlatList, Dimensions } from "react-native";
 import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
 import { COLORS, NFTData } from "../constants";
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
 
@@ -17,7 +15,7 @@ const Home = ({route}) => {
   const THRESHOLD = 1800;
 
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
-  const {user} = storedCredentials;
+  const {user} = storedCredentials ? storedCredentials : {};
 
   const clearLogin = () => {
     AsyncStorage.removeItem('vpaCredentials')

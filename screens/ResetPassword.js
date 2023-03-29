@@ -1,4 +1,4 @@
-import { Text, View, Image, TextInput, useWindowDimensions, StyleSheet, Button, Platform, Pressable } from 'react-native'
+import { Text, View, Image, useWindowDimensions, StyleSheet, Button, Platform, Pressable } from 'react-native'
 import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { CustomButton, CustomInput } from '../components';
 import { useState } from 'react';
@@ -19,7 +19,7 @@ const ResetPassword = () => {
                     style={[styles.logo, { height: height * 0.3 }]}
                 />
                 <View>
-                    <Text style={styles.primary}>Enter the email address associated with your account and we will send a code to reset your password</Text>
+                    <Text style={styles.primary}>Enter the email address associated with your account and we will send the password reset link</Text>
                 </View>
                 <CustomInput placeholder="Email" value={email} setValue={setEmail}/>
                 <CustomButton text="Continue" onPress={onContinue}/>

@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
   container_PRIMARY: {
     backgroundColor: '#2196f3'
   },
+  
   container_TERTIARY: {
     
   },
@@ -30,6 +31,9 @@ const styles = StyleSheet.create({
   },
   text_TERTIARY: {
     color: COLORS.gray
+  },
+  text_SECONDARY: {
+    color: '#6082B6'
   },
   container_DOB: {
     alignItems: 'flex-start',

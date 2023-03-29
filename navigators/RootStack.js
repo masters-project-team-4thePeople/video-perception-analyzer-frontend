@@ -8,6 +8,8 @@ import { useFonts } from 'expo-font';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { CredentialsContext } from '../components/CredentialsContext';
+import Welcome from '../screens/Welcome';
+import Categories from '../screens/Categories';
 
 const Stack = createStackNavigator();
 const theme = {
@@ -39,7 +41,15 @@ const RootStack = () => {
                 ({ storedCredentials }) => (
                     <NavigationContainer theme={theme}>
                         <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Login">
-                            {storedCredentials ? <Stack.Screen name='Home' component={Home} /> :
+                            {storedCredentials ? (
+                                <>
+                                    <Stack.Screen name='Welcome' component={Welcome}/>
+                                    <Stack.Screen name='Home' component={Home}  options={{gestureEnabled: false}}/>
+                                    <Stack.Screen name='Details' component={Details}/>
+                                    <Stack.Screen name='Categories' component={Categories}/>
+                                </>
+                                
+                            ) :
                                 (
                                     <>
                                         <Stack.Screen name='Login' component={Login} />

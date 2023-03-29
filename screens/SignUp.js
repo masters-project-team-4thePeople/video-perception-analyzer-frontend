@@ -1,16 +1,14 @@
-import { Text, View, Image, TextInput, useWindowDimensions, StyleSheet, Button, Platform, Pressable, Dimensions, Keyboard, Alert, ActivityIndicator } from 'react-native'
-import { COLORS, FONTS, SIZES, assets } from "../constants";
+import { Text, View, Image, TextInput, useWindowDimensions, StyleSheet, Pressable, Dimensions, Alert } from 'react-native'
+import { COLORS, FONTS, assets } from "../constants";
 import { CustomButton, CustomInput } from '../components';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { ScrollView } from 'react-native-gesture-handler';
 import Moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BarPasswordStrengthDisplay } from 'react-native-password-strength-meter';
-import { validation } from '../constants/validation'
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, onAuthStateChanged, getAuth } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, getAuth } from 'firebase/auth';
 import { auth } from '../firebase';
 
 
@@ -18,7 +16,6 @@ const SignUp = () => {
 
   const navigation = useNavigation();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
   const [uppercase, setUpperCase] = useState(false);
   const [digit, setDigit] = useState(false);
   const [special, setSpecial] = useState(false);
@@ -26,6 +23,18 @@ const SignUp = () => {
   const [whitespace, setWhitespace] = useState(false);
   const [lowecase, setLowerCase] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSecure, setIsSecure] = useState(true);
+  const [isSignUpDisabled, setIsSignUpDisabled] = useState(true)
+  const { height } = useWindowDimensions();
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [dob, setdob] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [validationMessage, setValidationMessage] = useState("");
+  const [date, setDate] = useState(new Date())
+  const inputRef = useRef(null);
+  const authCurr = getAuth();
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -37,9 +46,21 @@ const SignUp = () => {
   };
 
   const checkValidation = (event) => {
+    let pass = event.nativeEvent.text
     let white = /^(?=.*\s)/;
-    setWhitespace(white.test(password))
-    // console.log(inputRef.current.target)
+    setWhitespace(white.test(pass))
+    let max = /^.{6,15}$/
+    setMaximum(max.test(pass))
+    let spec = /^[a-zA-Z0-9 ]*$/
+    setSpecial(spec.test(pass))
+    let num = /\d/
+    setDigit(num.test(pass))
+    let upper = /[A-Z]/
+    let lower = /[a-z]/
+    let upperVal = upper.test(pass)
+    let lowerVal = lower.test(pass)
+    setUpperCase(upperVal)
+    setLowerCase(lowerVal)
   }
 
   const handleConfirm = (date) => {
@@ -50,14 +71,6 @@ const SignUp = () => {
     hideDatePicker();
   };
 
-  const { height } = useWindowDimensions();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [dob, setdob] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [validationMessage, setValidationMessage] = useState("");
-
   const validateAndSet = (value, valueToCompare, setValue) => {
     if (value !== valueToCompare) {
       setValidationMessage("Passwords do not match.");
@@ -67,12 +80,24 @@ const SignUp = () => {
     setValue(value);
   };
 
-  const [date, setDate] = useState(new Date())
-  const inputRef = useRef(null);
-  const authCurr = getAuth();
+  const validateAndSetPass = (value, valueToCompare, setValue) => {
+    if (value !== valueToCompare) {
+      setValidationMessage("Passwords do not match.");
+    } else {
+      setValidationMessage("");
+    }
+    setValue(value);
+  };
+
   const onSignUpPressed = () => {
     if(!username || !email || !dob || !password || !confirmPassword) {
       Alert.alert("Please fill the complete form");
+    } else if(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/.test(email)) {
+      Alert.alert("Please fill a valid email address")
+    } else if(!maximum || special || !digit || !uppercase || !lowecase || whitespace) {
+      Alert.alert("Please enter a password that satisfies the conditions")
+    } else if(password!==confirmPassword) {
+      Alert.alert("Please verify the passwords")
     } else {
       // setIsLoading(true);
       createUserWithEmailAndPassword(auth, email, password)
@@ -82,8 +107,6 @@ const SignUp = () => {
           updateProfile(auth.currentUser, {
             displayName: username
           }).then(() => {
-            console.log(auth.currentUser)
-            console.log(username)
             Alert.alert('Please check your email to activate your account.');
           })
         });
@@ -99,6 +122,18 @@ const SignUp = () => {
 
   const onLoginPressed = () => {
     navigation.navigate('Login')
+  }
+
+  const handleEmail = () => {
+
+  }
+
+  const _handlePress = () => {
+    console.log(password)
+  }
+
+  const toggleIsSecure = () => {
+    setIsSecure(!isSecure);
   }
 
   const loginWithFacebook = () => this.openURL('http://localhost:3000/auth/facebook');
@@ -120,6 +155,7 @@ const SignUp = () => {
             mode="date"
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
+            maximumDate={new Date()}
           />
         </View>
         <View style={styles.root}>
@@ -129,7 +165,7 @@ const SignUp = () => {
             style={[styles.logo, { height: height * 0.3 }]}
           />
           <Text style={styles.primary}>Create Account</Text>
-          <CustomInput placeholder="Email" value={email} setValue={setEmail} />
+          <CustomInput placeholder="Email" value={email} setValue={setEmail}/>
           <CustomInput placeholder="Display Name" value={username} setValue={setUsername} />
           {!dob ? (<CustomButton text="Date of Birth" onPress={showDatePicker} type='DOB' />) :
             (<CustomInput placeholder="Date of Birth" value={dob.toString()} setValue={setdob} />)}
@@ -139,12 +175,25 @@ const SignUp = () => {
             <TextInput
               ref={inputRef}
               value={password}
-              onChangeText={(password) => setPassword(password)}
+              onChangeText={(value) => validateAndSet(value, confirmPassword, setPassword)}
               placeholder="Password"
-              secureTextEntry={true}
+              secureTextEntry={isSecure}
               maxLength={15}
-              clearButtonMode="always"
-              onTextInput={checkValidation} />
+              onChange={checkValidation}
+            
+              />
+              {!isSecure ? <Icon onPress={toggleIsSecure}
+              style={{left: '90%', bottom: '35%'}}
+                name='eye'
+                color='#000'
+                size={14}
+              /> : <Icon onPress={toggleIsSecure}
+              style={{left: '90%', bottom: '35%'}}
+                name='eye-slash'
+                color='#000'
+                size={14}
+              />}
+              
             <BarPasswordStrengthDisplay
               password={password}
               width={300}
@@ -153,9 +202,9 @@ const SignUp = () => {
           </View>
           {password.length > 0 ?
           <View>
-            {maximum ? <Text><Icon name='check'></Icon> Between 6-15 Characters</Text> : <Text style={styles.red}><Icon name='close'></Icon> Between 6-15 Characters</Text> }
-            {special ? <Text><Icon name='check'></Icon> Must include @ or ! or #</Text> : <Text style={styles.red}><Icon name='close'></Icon> Must include @ or ! or #</Text> }
-            {digit ? <Text><Icon name='check'></Icon> Must include a digit</Text> : <Text style={styles.red}><Icon name='close'></Icon> Must include a digit</Text> }
+            {maximum ? <Text><Icon name='check'></Icon> Between 6-15 Characters</Text> : <Text style={styles.red}><Icon name='close'></Icon> Between 6-15 characters</Text> }
+            {!special ? <Text><Icon name='check'></Icon> Must include a special character</Text> : <Text style={styles.red}><Icon name='close'></Icon> Must include a special character</Text> }
+            {digit ? <Text><Icon name='check'></Icon> Must include a number</Text> : <Text style={styles.red}><Icon name='close'></Icon> Must include a digit</Text> }
             {uppercase && lowecase ? <Text><Icon name='check'></Icon> Must include uppercase and lowercase</Text> : <Text style={styles.red}><Icon name='close'></Icon> Must include uppercase and lowercase</Text> }
             {!whitespace ? <Text><Icon name='check'></Icon> No whitespaces</Text> : <Text style={styles.red}><Icon name='close'></Icon> No whitespaces</Text> }
           </View> : null }
@@ -171,7 +220,7 @@ const SignUp = () => {
 
           </View>
           {validationMessage ? <Text style={styles.red}><Icon name='warning'></Icon>{validationMessage}</Text> : null}
-          <CustomButton text="Sign Up" onPress={onSignUpPressed} />
+          <CustomButton text="Sign Up" onPress={onSignUpPressed}/>
           <View style={styles.buttons}>
             <Text>Have an account? </Text>
             <Pressable><Text style={{ color: '#2196f3' }} onPress={onLoginPressed}>Login</Text></Pressable>

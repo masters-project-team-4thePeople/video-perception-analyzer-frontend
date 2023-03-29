@@ -5,8 +5,9 @@ import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
+import CustomButton from "./CustomButton";
 
-const HomeHeader = ({ userName, onSearch }) => {
+const CategoriesHeader = ({onSearch}) => {
   const openMenu = () => {
     setIsMenuOpen(true);
   }
@@ -81,8 +82,7 @@ const HomeHeader = ({ userName, onSearch }) => {
             <MenuOptions customStyles={optionsStyles}>
               <MenuOption value={1} text='Profile Information'/>
               <MenuOption value={2} text='Edit Profile'/>
-              <MenuOption value={3} text='Edit Categories'/>
-              <MenuOption value={4} text='Logout'/>
+              <MenuOption value={3} text='Logout'/>
             </MenuOptions>
           </Menu>
       </View>
@@ -95,7 +95,7 @@ const HomeHeader = ({ userName, onSearch }) => {
             color: COLORS.white,
           }}
         >
-          Hello, {userName.displayName} 👋
+          Hello👋
         </Text>
 
         <Text
@@ -106,34 +106,8 @@ const HomeHeader = ({ userName, onSearch }) => {
             marginTop: SIZES.base / 2,
           }}
         >
-          Let's view your favorite videos
+          Select at least 3 categories to get started
         </Text>
-      </View>
-
-      <View style={{ marginTop: SIZES.font }}>
-        <View
-          style={{
-            width: "100%",
-            borderRadius: SIZES.font,
-            backgroundColor: COLORS.primary,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: SIZES.font,
-            paddingVertical: SIZES.small - 2,
-          }}
-        >
-          <Image
-            source={assets.search}
-            resizeMode="contain"
-            style={{ width: 20, height: 20, marginRight: SIZES.base }}
-          />
-            <TextInput
-              placeholder="Search Videos"
-              placeholderTextColor="white"
-              style={{ flex: 1, color: 'white' }}
-              onChangeText={onSearch}
-            />
-        </View>
       </View>
     </View>
   );
@@ -153,4 +127,4 @@ const optionsStyles = {
     color: 'black',
   },
 };
-export default HomeHeader;
+export default CategoriesHeader;
