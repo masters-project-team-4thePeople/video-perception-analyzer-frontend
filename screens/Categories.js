@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from "react-redux";
 import { setUserName, setSelectedCategories } from "../redux/actions";
 
-const Categories = ({route}) => {
+const Categories = () => {
   const [categoriesData, setCategoriesData] = useState(CategoriesData);
   const navigation = useNavigation();
   const [paused, setPaused] = useState(false);
@@ -22,16 +22,8 @@ const Categories = ({route}) => {
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
   const {user} = storedCredentials ? storedCredentials : {};
   const {category} = useSelector(state=>state.userReducer);
-  const dispatch = useDispatch();
 
 
-  const clearLogin = () => {
-    AsyncStorage.removeItem('vpaCredentials')
-    .then(() => {
-      setStoredCredentials("")}
-    )
-    .catch((error) => console.error(error));
-  }
 
   const navigateToHome = () => {
     if(category.length >= 3) {
@@ -51,12 +43,6 @@ const Categories = ({route}) => {
     }
   }
 
-  const handleVideoLayout = (e) => {
-    // console.log('video' + e.nativeEvent.layout.y)
-    const {height} = Dimensions.get("window");
-    setPositionStart(e.nativeEvent.layout.y - height + THRESHOLD);
-    setPositionEnd(e.nativeEvent.layouty + e.nativeEvent.layout.height - THRESHOLD)
-  }
 
   const renderIem = ({item, index}) => {
     return <CategoriesList item={item} index={index}/>

@@ -5,8 +5,11 @@ import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
+import { useSelector } from "react-redux";
 
-const HomeHeader = ({ userName, onSearch }) => {
+const HomeHeader = ({onSearch }) => {
+  const {name} = useSelector(state=>state.userReducer);
+
   const openMenu = () => {
     setIsMenuOpen(true);
   }
@@ -21,9 +24,7 @@ const HomeHeader = ({ userName, onSearch }) => {
         userDetails: {}
       });
     } else if(value == 2) {
-      navigation.navigate('Home', {
-        userDetails: {}
-      });
+      navigation.navigate('EditProfile');
     } else {
       clearLogin();
     }
@@ -95,7 +96,7 @@ const HomeHeader = ({ userName, onSearch }) => {
             color: COLORS.white,
           }}
         >
-          Hello, {userName.displayName} 👋
+          Hello, {name} 👋
         </Text>
 
         <Text

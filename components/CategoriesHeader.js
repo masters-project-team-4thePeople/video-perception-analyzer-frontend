@@ -6,22 +6,24 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
 import CustomButton from "./CustomButton";
+import { useSelector } from "react-redux";
 
-const CategoriesHeader = ({onSearch}) => {
+const CategoriesHeader = ({ onSearch }) => {
   const openMenu = () => {
     setIsMenuOpen(true);
   }
+  const { name } = useSelector(state => state.userReducer);
   const onBackdropPress = () => {
     setIsMenuOpen(false);
   }
   const navigation = useNavigation();
   const onOptionSelect = (value) => {
     setIsMenuOpen(false);
-    if(value == 1) {
+    if (value == 1) {
       navigation.navigate('Home', {
         userDetails: {}
       });
-    } else if(value == 2) {
+    } else if (value == 2) {
       navigation.navigate('Home', {
         userDetails: {}
       });
@@ -29,13 +31,14 @@ const CategoriesHeader = ({onSearch}) => {
       clearLogin();
     }
   }
-  const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+  const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext);
   const clearLogin = () => {
     AsyncStorage.removeItem('vpaCredentials')
-    .then(() => {
-      setStoredCredentials("")}
-    )
-    .catch((error) => console.error(error));
+      .then(() => {
+        setStoredCredentials("")
+      }
+      )
+      .catch((error) => console.error(error));
   }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,33 +61,34 @@ const CategoriesHeader = ({onSearch}) => {
           resizeMode="contain"
           style={{ width: '30%', height: 90, left: -30 }}
         />
-       
+
         <Menu opened={isMenuOpen}
           onBackdropPress={onBackdropPress}
           onSelect={value => onOptionSelect(value)}>
           <MenuTrigger style={{ width: 45, height: 80 }} onPress={openMenu}>
             <Image
-            source={assets.person03}
-            resizeMode="contain"
-            style={{ width: "100%", height: "100%" }}
-          />
-          <Image
-            source={assets.badge}
-            resizeMode="contain"
-            style={{
-              position: "absolute",
-              width: 15,
-              height: 15,
-              bottom: 15,
-              right: 0,
-            }}
-          /></MenuTrigger>
-            <MenuOptions customStyles={optionsStyles}>
-              <MenuOption value={1} text='Profile Information'/>
-              <MenuOption value={2} text='Edit Profile'/>
-              <MenuOption value={3} text='Logout'/>
-            </MenuOptions>
-          </Menu>
+              source={assets.person03}
+              resizeMode="contain"
+              style={{ width: "100%", height: "100%" }}
+            />
+            <Image
+              source={assets.badge}
+              resizeMode="contain"
+              style={{
+                position: "absolute",
+                width: 15,
+                height: 15,
+                bottom: 15,
+                right: 0,
+              }}
+            /></MenuTrigger>
+          <MenuOptions customStyles={optionsStyles}>
+            <MenuOption value={1} text='Profile Information' />
+            <MenuOption value={2} text='Edit Profile' />
+            <MenuOption value={3} text='Edit Categories' />
+            <MenuOption value={4} text='Logout' />
+          </MenuOptions>
+        </Menu>
       </View>
 
       <View style={{ marginVertical: SIZES.font }}>
@@ -95,7 +99,7 @@ const CategoriesHeader = ({onSearch}) => {
             color: COLORS.white,
           }}
         >
-          Hello👋
+          Hello, {name} 👋
         </Text>
 
         <Text

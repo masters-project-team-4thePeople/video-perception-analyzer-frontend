@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { View, Text, Image, StyleSheet, ScrollView, Dimensions, TouchableOpacity, Auto } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-import { COLORS, SIZES, SHADOWS, assets } from "../constants";
-import { SubInfo, EthPrice, NFTTitle } from "./SubInfo";
-import { RectButton, CircleButton } from "./Button";
+import { COLORS, SHADOWS } from "../constants";
 // import Video from 'react-native-video';
-import { Video, AVPlaybackStatus } from 'expo-av';
-import { Button } from "react-native-web";
 import { useSelector, useDispatch } from "react-redux";
-import { setUserName, setSelectedCategories } from "../redux/actions";
+import { setSelectedCategories } from "../redux/actions";
 
 const CategoriesList = ({ item, index, onPress }) => {
     const [selectedCategory, setSelectedCategory] = useState("");

@@ -11,6 +11,8 @@ import { signInWithEmailAndPassword, getAuth, onAuthStateChanged, FacebookAuthPr
 import { auth } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
+import { useSelector, useDispatch } from "react-redux";
+import { setUserName } from "../redux/actions";
 
 const Login = () => {
 
@@ -19,11 +21,13 @@ const Login = () => {
     const authCurr = getAuth();
 
     const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+    const {name} = useSelector(state=>state.userReducer);
+    const dispatch = useDispatch();
     
     const onSignInPressed = async() => {
         signInWithEmailAndPassword(auth, username, password)
         .then((user) => {
-          console.log(user.user.displayName)
+          dispatch(setUserName(user.user.displayName));
           if(!user.user.emailVerified) {
             Alert.alert("Please verify your email to login");
           } else {
