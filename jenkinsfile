@@ -5,6 +5,21 @@ pipeline {
     //         label 'docker-agent-python'
     //         }
     //   }
+    environment {
+        APP_NAME = "my-django-app"
+        DOCKER_IMAGE = "my-django-image"
+        DOCKER_TAG = "latest"
+        DOCKER_REPO = "my-docker-repo"
+        SSH_USER = "my-ssh-user"
+        SSH_HOST = "my-digital-ocean-droplet-ip"
+        SSH_PORT = "22"
+        SSH_KEY = credentials('my-ssh-key')
+        DB_NAME = "my-db-name"
+        DB_USER = "my-db-user"
+        DB_PASSWORD = credentials('my-db-password')
+        DB_HOST = "my-db-host"
+        DB_PORT = "5432"
+    }
     triggers {
         pollSCM '* * * * *'
     }
@@ -17,6 +32,16 @@ pipeline {
                 // cd video-perception-analyser-frontend
                 // yarn install
                 // '''
+                sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'my-docker-hub-credentials', variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                    sh 'docker login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW}'
+                }
+                sh 'docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+                sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
             }
         }
         stage('Test') {
@@ -26,12 +51,43 @@ pipeline {
                 // '''
             }
         }
-        stage('Deliver') {
+        stage('Deploy') {
             steps {
                 echo 'Deliver....'
                 sh '''
                 echo "doing delivery stuff.."
                 '''
+                sshagent(['my-ssh-key']) {
+                    sh "ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST} 'docker pull ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} && docker stop ${APP_NAME} && docker rm ${APP_NAME} && docker run -d --name=${APP_NAME} -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} -e DB_HOST=${DB_HOST} -e DB_PORT=${DB_PORT} -p 8000:8000 ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
+                }
+            }
+        }
+    }
+}
+
+pipeline {
+    agent any
+ 
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
+            }
+        }
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([string(credentialsId: 'my-docker-hub-credentials', variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                    sh 'docker login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW}'
+                }
+                sh 'docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+                sh 'docker push ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sshagent(['my-ssh-key']) {
+                    sh "ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST} 'docker pull ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG} && docker stop ${APP_NAME} && docker rm ${APP_NAME} && docker run -d --name=${APP_NAME} -e DB_NAME=${DB_NAME} -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} -e DB_HOST=${DB_HOST} -e DB_PORT=${DB_PORT} -p 8000:8000 ${DOCKER_REPO}/${DOCKER_IMAGE}:${DOCKER_TAG}'"
+                }
             }
         }
     }
