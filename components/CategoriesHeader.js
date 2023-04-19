@@ -85,8 +85,7 @@ const CategoriesHeader = ({ onSearch }) => {
           <MenuOptions customStyles={optionsStyles}>
             <MenuOption value={1} text='Profile Information' />
             <MenuOption value={2} text='Edit Profile' />
-            <MenuOption value={3} text='Edit Categories' />
-            <MenuOption value={4} text='Logout' />
+            <MenuOption value={5} text='Logout' />
           </MenuOptions>
         </Menu>
       </View>

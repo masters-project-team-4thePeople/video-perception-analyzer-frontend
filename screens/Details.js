@@ -1,17 +1,24 @@
-import React from "react";
-import { View, Text, SafeAreaView, Image, StatusBar, FlatList } from "react-native";
+import React, { useState } from "react";
+import { View, Text, SafeAreaView, Image, StatusBar, FlatList, StyleSheet } from "react-native";
 
 import { COLORS, SIZES, assets, SHADOWS, FONTS } from "../constants";
 import { CircleButton, RectButton, SubInfo, DetailsDesc, DetailsBid, FocusedStatusBar } from "../components";
+import { Video, AVPlaybackStatus } from 'expo-av';
 
-const DetailsHeader = ({ data, navigation }) => (
+const DetailsHeader = ({ data, navigation, video, setStatus }) => (
+
   <View style={{ width: "100%", height: 373 }}>
-    <Image
-      source={data.image}
-      resizeMode="cover"
-      style={{ width: "100%", height: "100%" }}
+    <Video
+      ref={video}
+      style={styles.video}
+      source={data.video}
+      useNativeControls
+      resizeMode="contain"
+      isLooping
+      onPlaybackStatusUpdate={setStatus}
+      shouldPlay
+    // onLayout={handleVideoLayout}
     />
-
     <CircleButton
       imgUrl={assets.left}
       handlePress={() => navigation.goBack()}
@@ -29,7 +36,8 @@ const DetailsHeader = ({ data, navigation }) => (
 
 const Details = ({ route, navigation }) => {
   const { data } = route.params;
-
+  const video = React.useRef(null);
+  const [status, setStatus] = useState({});
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FocusedStatusBar
@@ -53,38 +61,55 @@ const Details = ({ route, navigation }) => {
         <RectButton minWidth={170} fontSize={SIZES.large} {...SHADOWS.dark} />
       </View>
 
-      <FlatList
-        data={data.bids}
-        renderItem={({ item }) => <DetailsBid bid={item} />}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: SIZES.extraLarge * 3,
-        }}
-        ListHeaderComponent={() => (
-          <React.Fragment>
-            <DetailsHeader data={data} navigation={navigation} />
-            <SubInfo />
-            <View style={{ padding: SIZES.font }}>
-              <DetailsDesc data={data} />
-
-              {data.bids.length > 0 && (
-                <Text
-                  style={{
-                    fontSize: SIZES.font,
-                    fontFamily: FONTS.semiBold,
-                    color: COLORS.primary,
-                  }}
-                >
-                  Current Bid
-                </Text>
-              )}
-            </View>
-          </React.Fragment>
-        )}
-      />
+      <React.Fragment>
+        <DetailsHeader data={data} navigation={navigation} video={video} setStatus={setStatus} />
+        <SubInfo />
+        <View style={{ padding: SIZES.font }}>
+          <DetailsDesc data={data} />
+          <Text
+            style={{
+              fontSize: SIZES.font,
+              fontFamily: FONTS.semiBold,
+              color: COLORS.primary,
+            }}
+          >
+            Why this video has been recommended?
+          </Text>
+          <View
+          style={{
+            marginTop: SIZES.base,
+          }}
+        >
+          <Text
+            style={{
+              color: COLORS.secondary,
+              fontSize: SIZES.small,
+              fontFamily: FONTS.regular,
+              lineHeight: SIZES.large,
+            }}
+          >
+            This video is recommended to you because
+            <Text
+              style={{
+                color: COLORS.primary,
+                fontSize: SIZES.small,
+                fontFamily: FONTS.semiBold,
+              }}
+            >
+            </Text>
+          </Text>
+        </View>
+        </View>
+      </React.Fragment>
     </SafeAreaView>
   );
 };
 
 export default Details;
+
+var styles = StyleSheet.create({
+  video: {
+    flex: 1,
+    alignSelf: 'stretch'
+  },
+})

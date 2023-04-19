@@ -7,8 +7,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
 import { useSelector } from "react-redux";
 
-const HomeHeader = ({onSearch }) => {
-  const {name} = useSelector(state=>state.userReducer);
+const HomeHeader = ({ onSearch, searchBar }) => {
+  const { name } = useSelector(state => state.userReducer);
 
   const openMenu = () => {
     setIsMenuOpen(true);
@@ -19,23 +19,28 @@ const HomeHeader = ({onSearch }) => {
   const navigation = useNavigation();
   const onOptionSelect = (value) => {
     setIsMenuOpen(false);
-    if(value == 1) {
+    if (value == 1) {
       navigation.navigate('Home', {
         userDetails: {}
       });
-    } else if(value == 2) {
+    } else if (value == 2) {
       navigation.navigate('EditProfile');
+    } else if (value == 3) {
+      navigation.navigate('EditCategories');
+    } else if (value == 4) {
+      navigation.navigate('UploadVideo');
     } else {
       clearLogin();
     }
   }
-  const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
+  const { storedCredentials, setStoredCredentials } = useContext(CredentialsContext);
   const clearLogin = () => {
     AsyncStorage.removeItem('vpaCredentials')
-    .then(() => {
-      setStoredCredentials("")}
-    )
-    .catch((error) => console.error(error));
+      .then(() => {
+        setStoredCredentials("")
+      }
+      )
+      .catch((error) => console.error(error));
   }
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,34 +63,35 @@ const HomeHeader = ({onSearch }) => {
           resizeMode="contain"
           style={{ width: '30%', height: 90, left: -30 }}
         />
-       
+
         <Menu opened={isMenuOpen}
           onBackdropPress={onBackdropPress}
           onSelect={value => onOptionSelect(value)}>
           <MenuTrigger style={{ width: 45, height: 80 }} onPress={openMenu}>
             <Image
-            source={assets.person03}
-            resizeMode="contain"
-            style={{ width: "100%", height: "100%" }}
-          />
-          <Image
-            source={assets.badge}
-            resizeMode="contain"
-            style={{
-              position: "absolute",
-              width: 15,
-              height: 15,
-              bottom: 15,
-              right: 0,
-            }}
-          /></MenuTrigger>
-            <MenuOptions customStyles={optionsStyles}>
-              <MenuOption value={1} text='Profile Information'/>
-              <MenuOption value={2} text='Edit Profile'/>
-              <MenuOption value={3} text='Edit Categories'/>
-              <MenuOption value={4} text='Logout'/>
-            </MenuOptions>
-          </Menu>
+              source={assets.person03}
+              resizeMode="contain"
+              style={{ width: "100%", height: "100%" }}
+            />
+            <Image
+              source={assets.badge}
+              resizeMode="contain"
+              style={{
+                position: "absolute",
+                width: 15,
+                height: 15,
+                bottom: 15,
+                right: 0,
+              }}
+            /></MenuTrigger>
+          <MenuOptions customStyles={optionsStyles}>
+            <MenuOption value={1} text='Profile Information' />
+            <MenuOption value={2} text='Edit Profile' />
+            <MenuOption value={3} text='Edit Categories' />
+            <MenuOption value={4} text='Upload Video' />
+            <MenuOption value={5} text='Logout' />
+          </MenuOptions>
+        </Menu>
       </View>
 
       <View style={{ marginVertical: SIZES.font }}>
@@ -99,7 +105,7 @@ const HomeHeader = ({onSearch }) => {
           Hello, {name} 👋
         </Text>
 
-        <Text
+        {searchBar ? <Text
           style={{
             fontFamily: FONTS.bold,
             fontSize: SIZES.large,
@@ -108,34 +114,45 @@ const HomeHeader = ({onSearch }) => {
           }}
         >
           Let's view your favorite videos
-        </Text>
-      </View>
-
-      <View style={{ marginTop: SIZES.font }}>
-        <View
+        </Text> : <Text
           style={{
-            width: "100%",
-            borderRadius: SIZES.font,
-            backgroundColor: COLORS.primary,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingHorizontal: SIZES.font,
-            paddingVertical: SIZES.small - 2,
+            fontFamily: FONTS.bold,
+            fontSize: SIZES.large,
+            color: COLORS.white,
+            marginTop: SIZES.base / 2,
           }}
         >
-          <Image
-            source={assets.search}
-            resizeMode="contain"
-            style={{ width: 20, height: 20, marginRight: SIZES.base }}
-          />
+          Change your categories selection
+        </Text>}
+
+      </View>
+      {searchBar ?
+        <View style={{ marginTop: SIZES.font }}>
+          <View
+            style={{
+              width: "100%",
+              borderRadius: SIZES.font,
+              backgroundColor: COLORS.primary,
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: SIZES.font,
+              paddingVertical: SIZES.small - 2,
+            }}
+          >
+            <Image
+              source={assets.search}
+              resizeMode="contain"
+              style={{ width: 20, height: 20, marginRight: SIZES.base }}
+            />
             <TextInput
               placeholder="Search Videos"
               placeholderTextColor="white"
               style={{ flex: 1, color: 'white' }}
               onChangeText={onSearch}
             />
-        </View>
-      </View>
+
+          </View>
+        </View> : null}
     </View>
   );
 };

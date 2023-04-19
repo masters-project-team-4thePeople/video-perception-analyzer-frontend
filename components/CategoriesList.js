@@ -14,12 +14,14 @@ const CategoriesList = ({ item, index, onPress }) => {
 
     const handlePress = (item) => {
         item.selected = !item.selected
-        let tempVal = [...category]
         if(item.selected) {
+            let tempVal = [...category]
             tempVal.push(item)
             setTemp(tempVal)
             setSelectedCategory(item.name)
+            dispatch(setSelectedCategories(tempVal));
         } else {
+            let tempVal = [...category]
             let arrayCropped = tempVal.find((element) => {
                 return element.id === item.id;
             })
@@ -30,8 +32,9 @@ const CategoriesList = ({ item, index, onPress }) => {
             setTemp(tempVal)
             setSelectedCategory("")
             setTemp((temp) => [...temp]);
+            dispatch(setSelectedCategories(tempVal));
+
         }
-        dispatch(setSelectedCategories(tempVal));
     }
     return (
         <View flex style={{ backgroundColor: COLORS.primary, margin: 55 }}>

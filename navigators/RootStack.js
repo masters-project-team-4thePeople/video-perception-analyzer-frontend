@@ -10,6 +10,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { CredentialsContext } from '../components/CredentialsContext';
 import Welcome from '../screens/Welcome';
 import Categories from '../screens/Categories';
+import EditProfile from '../screens/EditProfile';
+import EditCategories from '../screens/EditCategories';
+import UploadVideo from '../screens/UploadVideo';
 
 const Stack = createStackNavigator();
 const theme = {
@@ -47,6 +50,9 @@ const RootStack = () => {
                                     <Stack.Screen name='Home' component={Home}  options={{gestureEnabled: false}}/>
                                     <Stack.Screen name='Details' component={Details}/>
                                     <Stack.Screen name='Categories' component={Categories}/>
+                                    <Stack.Screen name='EditProfile' component={EditProfile}/>
+                                    <Stack.Screen name='EditCategories' component={EditCategories}/>
+                                    <Stack.Screen name='UploadVideo' component={UploadVideo}/>
                                 </>
                                 
                             ) :

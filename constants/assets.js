@@ -4,7 +4,8 @@ import eye from "../assets/icons/eye.png";
 import heart from "../assets/icons/heart.png";
 import left from "../assets/icons/left.png";
 import search from "../assets/icons/search.png";
-
+import cross from "../assets/icons/cross.png";
+import error from "../assets/icons/error.png";
 
 import logo from "../assets/images/logo.png";
 import logo1 from "../assets/images/logo1.png";
@@ -38,6 +39,8 @@ export default {
   heart,
   left,
   search,
+  cross,
+  error,
 
   logo,
   logo1,
