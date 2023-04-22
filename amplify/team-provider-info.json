@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vpa-dev-214516-authRole",
+      "UnauthRoleArn": "arn:aws:iam::662795246074:role/amplify-vpa-dev-214516-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::662795246074:role/amplify-vpa-dev-214516-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-vpa-dev-214516-deployment",
+      "UnauthRoleName": "amplify-vpa-dev-214516-unauthRole",
+      "StackName": "amplify-vpa-dev-214516",
+      "StackId": "arn:aws:cloudformation:us-west-1:662795246074:stack/amplify-vpa-dev-214516/d22dfb70-dda3-11ed-9a24-064f3dda6fe5",
+      "AmplifyAppId": "d1lb39utnv1qpw"
+    },
+    "categories": {
+      "auth": {
+        "vpa23d1b070": {}
+      },
+      "storage": {
+        "vpas3": {}
+      }
+    }
+  }
+}

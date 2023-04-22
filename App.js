@@ -5,11 +5,26 @@ import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { CredentialsContext } from './components/CredentialsContext';
-import { LogBox } from 'react-native';
-import {Provider} from 'react-redux';
-import {Store} from './redux/store';
-LogBox.ignoreLogs(['Warning: ...']);
-LogBox.ignoreAllLogs();
+import React, {useMemo, useState} from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { AssetsSelector } from 'expo-images-picker';
+import { Ionicons } from '@expo/vector-icons'
+import { MediaType, Asset } from 'expo-media-library';
+
+import { Amplify, Storage } from 'aws-amplify';
+import awsconfig from './src/aws-exports';
+Amplify.configure(awsconfig);
+
+// const Stack = createStackNavigator();
+
+// const theme = {
+//   ...DefaultTheme,
+//   colors: {
+//     ...DefaultTheme.colors,
+//     background: "white"
+//   }
+// }
 
 const App = () => {
   const [appReady, setAppReady] = useState(false);
@@ -36,6 +51,38 @@ const App = () => {
     .catch(error=> console.error(error))
   }
 
+  const fetchVideoUri = async (uri) => {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    return blob;
+  }
+  const uploadFile = async (file) => {
+    const vid = await fetchVideoUri(file.uri);
+    return Storage.put(`my-video-filename${Math.random()}.mp4`,vid, {
+      level:'public',
+      contentType:file.type,
+      progressCallback(uploadProgress){
+        console.log('PROGRESS--', uploadProgress.loaded + '/' + uploadProgress.total);
+      }
+    })
+    .then((res) => {
+      Storage.get(res.key)
+      .then((result) => {
+        console.log('RESULT --- ', result);
+        let awsImageUri = result.substring(0,result.indexOf('?'))
+        console.log('RESULT AFTER REMOVED URI --', awsImageUri)
+        setIsLoading(false)
+      })
+      .catch(e => {
+        console.log(e);
+      })
+    }).catch(e => {
+      console.log(e);
+    })
+  }
+
+  // if(!loaded) return null;
+
   if(!appReady) {
     return <AppLoading
     startAsync={checkLoginCredentials}
@@ -53,6 +100,7 @@ const App = () => {
       </MenuProvider>
     </CredentialsContext.Provider>
   );
-}
+ 
+  }
 
 export default App;
