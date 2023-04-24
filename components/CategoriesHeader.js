@@ -59,7 +59,7 @@ const CategoriesHeader = ({ onSearch }) => {
         <Image
           source={assets.vpa}
           resizeMode="contain"
-          style={{ width: '30%', height: 90, left: -30 }}
+          style={{ width: '30%', height: 80, left: -30 }}
         />
 
         <Menu opened={isMenuOpen}

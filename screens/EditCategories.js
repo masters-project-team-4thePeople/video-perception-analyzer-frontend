@@ -1,13 +1,19 @@
-import React, { useState } from "react";
-import { SafeAreaView, Text, View, FlatList, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
-import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, Text, View, FlatList, TouchableOpacity, StyleSheet, Image, Dimensions, Alert } from "react-native";
+import { NFTCard, HomeHeader, FocusedStatusBar, CustomButton } from "../components";
 import { COLORS, FONTS, SIZES, assets, SHADOWS } from "../constants";
 import { useSelector, useDispatch } from "react-redux";
 import { CategoriesData } from "../constants";
+import { ScrollView } from "react-native";
+import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
+import { useNavigation } from '@react-navigation/native';
+import Footer from "../components/Footer";
 
 const EditCategories = () => {
+  const navigation = useNavigation();
   const { category } = useSelector(state => state.userReducer);
   const [categoriesData, setCategoriesData] = useState(CategoriesData);
+  const [differenceCategoriesData, setDifferenceCategoriesData] = useState([])
   const [positionStart, setPositionStart] = useState(null);
   const [positionEnd, setPositionEnd] = useState(null);
   const [paused, setPaused] = useState(false);
@@ -28,29 +34,83 @@ const EditCategories = () => {
     id: "3",
     name: "Music",
     selected: false
+  }, {
+    id: "4",
+    name: "Pets & Animals",
+    selected: false
+  },{
+    id: "5",
+    name: "Sports",
+    selected: false
   }])
 
-  // const handleScroll = (e) => {
-  //   // console.log('scroll' + e.nativeEvent.contentOffset.y)
-  //   const scrollPosition = e.nativeEvent.contentOffset.y;
-  //   if (scrollPosition > positionStart && scrollPosition < positionEnd && paused) {
-  //     setPaused(false)
-  //   } else if ((scrollPosition > positionEnd || scrollPosition < positionStart) && !paused) {
-  //     setPaused(true);
-  //   }
-  // }
-  // const handleScrollSecond = (e) => {
-  //   // console.log('scroll' + e.nativeEvent.contentOffset.y)
-  //   const scrollPosition = e.nativeEvent.contentOffset.y + 100;
-  //   if (scrollPosition > positionStart2 && scrollPosition < positionEnd2 && paused2) {
-  //     setPaused2(false)
-  //   } else if ((scrollPosition > positionEnd2 || scrollPosition < positionStart2) && !paused2) {
-  //     setPaused2(true);
-  //   }
-  // }
+  useEffect(() => {
+    addCatData()
+  }, [])
 
+  const addCatData = () => {
+    let data = categoriesData.filter(a => dummyCat.every(c => c.id !== a.id))
+    setDifferenceCategoriesData(data)
+  }
+
+  const handlePressCross = (item) => {
+    let data = [...differenceCategoriesData]
+    data.splice(0, 0, item)
+    let addData = [...dummyCat]
+    let ind = addData.indexOf(item)
+    addData.splice(ind, 1)
+    setDummyCat(addData)
+    setDifferenceCategoriesData(data)
+  }
+
+  const handlePress = (item) => {
+    let data = [...dummyCat]
+    data.splice(0, 0, item)
+    let addData = [...differenceCategoriesData]
+    let ind = addData.indexOf(item)
+    addData.splice(ind, 1)
+    setDummyCat(data)
+    setDifferenceCategoriesData(addData)
+  }
+
+  const saveChanges = () => {
+    if(dummyCat.length >= 3) {
+      Alert.alert('Success', 'Your hanges were saved', [
+        {
+          text: 'Cancel'
+        },
+        {text: 'Go to home', onPress: () => navigation.navigate('Home')},
+      ]);
+  
+    } else {
+      Alert.alert('Please select atleast 3 categories')
+    }
+  }
 
   const renderIem = ({ item, index }) => {
+    return <>
+      <Pressable flex style={{ backgroundColor: COLORS.primary, margin: 55 }}>
+        <TouchableOpacity
+          style={styles.selectedCategories}
+          onPress={() => handlePressCross(item)}>
+          <Text style={{ color: COLORS.white, textAlign: 'center' }}>{item.name}</Text>
+          <Image
+            source={assets.error}
+            resizeMode="contain"
+            style={{
+              position: "absolute",
+              width: 20,
+              height: 20,
+              bottom: 70,
+              right: 0,
+            }}
+          />
+        </TouchableOpacity>
+      </Pressable>
+    </>
+  }
+
+  const renderIemFull = ({ item, index }) => {
     return <>
       <View flex style={{ backgroundColor: COLORS.primary, margin: 55 }}>
         <TouchableOpacity
@@ -58,7 +118,7 @@ const EditCategories = () => {
           onPress={() => handlePress(item)}>
           <Text style={{ color: COLORS.white, textAlign: 'center' }}>{item.name}</Text>
           <Image
-            source={assets.error}
+            source={assets.plus}
             resizeMode="contain"
             style={{
               position: "absolute",
@@ -75,35 +135,35 @@ const EditCategories = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <FocusedStatusBar backgroundColor={COLORS.primary} />
-      <View style={{ flex: 1 }}>
+      <FocusedStatusBar backgroundColor={COLORS.primary}/>
         <HomeHeader searchBar={false} />
-        <View>
+        <View style={{alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%'}}><CustomButton text="Save Changes" type="SECONDARY" onPress={saveChanges}></CustomButton></View>
+        <ScrollView>
           <Text
             style={{
-              fontSize: SIZES.font,
+              fontSize: SIZES.medium,
               fontFamily: FONTS.semiBold,
               color: COLORS.primary,
               alignContent: 'center',
               textAlign: 'center',
-              marginTop: 20
+              paddingTop: 20
             }}
           >
             Your Categories
           </Text>
+          
           <FlatList
             style={{ marginHorizontal: 2 }}
             numColumns={2}
             data={dummyCat}
             renderItem={renderIem}
             keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={true} />
-
-        </View>
-        <View>
+            showsVerticalScrollIndicator={true} 
+            contentContainerStyle={{ paddingBottom: 50 }}
+          />
           <Text
             style={{
-              fontSize: SIZES.font,
+              fontSize: SIZES.medium,
               fontFamily: FONTS.semiBold,
               color: COLORS.primary,
               alignContent: 'center',
@@ -115,12 +175,15 @@ const EditCategories = () => {
           <FlatList
             style={{ marginHorizontal: 2 }}
             numColumns={2}
-            data={categoriesData}
-            renderItem={renderIem}
+            data={differenceCategoriesData}
+            renderItem={renderIemFull}
             keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={true} />
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={{ paddingBottom: 80 }}/>
+        </ScrollView>
+        <View>
+        <Footer/>
         </View>
-      </View>
     </SafeAreaView>
   );
 };

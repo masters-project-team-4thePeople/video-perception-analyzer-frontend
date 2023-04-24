@@ -60,7 +60,8 @@ const Categories = () => {
             data={categoriesData}
             renderItem={renderIem}
             keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}/>
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ paddingBottom: 50 }}/>
           
     </SafeAreaView>
   );
