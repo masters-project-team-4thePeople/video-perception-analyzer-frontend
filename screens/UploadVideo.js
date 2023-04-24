@@ -9,7 +9,7 @@ const UploadVideo = () => {
   
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CustomButton text="Upload Video" onPress={onUpload}/>
+      
     </SafeAreaView>
   );
 };
