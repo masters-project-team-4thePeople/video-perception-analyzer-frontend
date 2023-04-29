@@ -1,16 +1,13 @@
 import React, { useState, useContext } from "react";
-import { View, SafeAreaView, FlatList, Dimensions, Text, Image, TouchableOpacity } from "react-native";
+import { View, SafeAreaView, FlatList, Dimensions } from "react-native";
 import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
-import { COLORS, NFTData, assets, SIZES } from "../constants";
+import { COLORS, NFTData } from "../constants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
-import Footer from "../components/Footer";
 
 const Home = ({route}) => {
-  const navigation = useNavigation();
   const [nftData, setNftData] = useState(NFTData);
+
   const [paused, setPaused] = useState(false);
   const [positionStart, setPositionStart] = useState(null)
   const [positionEnd, setPositionEnd] = useState(null)
@@ -61,8 +58,6 @@ const Home = ({route}) => {
     setPositionEnd(e.nativeEvent.layouty + e.nativeEvent.layout.height - THRESHOLD)
   }
 
-  
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FocusedStatusBar backgroundColor={COLORS.primary} />
@@ -92,40 +87,6 @@ const Home = ({route}) => {
             style={{ height: 300, backgroundColor: '#6082B6' }} />
           <View style={{ flex: 1, backgroundColor: COLORS.white }} />
         </View>
-
-        {/* <View style={{position: 'absolute', left: 0, right: 0, bottom: 0}}>
-          <View style={{backgroundColor: 'white', height: 40, color: 'black', flexDirection: 'row'}}>
-            <TouchableOpacity onPress={navigateToHome}>
-              <Image
-                source={assets.home}
-                resizeMode="contain"
-                style={{ width: 30, height: 30, marginLeft: 40, marginTop: 10, shadowColor: 'black' }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToUpload}>
-              <Image
-                source={assets.upload}
-                resizeMode="contain"
-                style={{ width: 30, height: 30, marginLeft: 65, marginTop: 10 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToEdit}>
-              <Image
-                source={assets.edit}
-                resizeMode="contain"
-                style={{ width: 30, height: 30, marginLeft: 65, marginTop: 10 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={navigateToProfile}>
-              <Image
-                source={assets.user}
-                resizeMode="contain"
-                style={{ width: 30, height: 30, marginLeft: 65, marginTop: 10 }}
-              />
-            </TouchableOpacity>
-          </View>
-        </View> */}
-        <Footer/>
       </View>
     </SafeAreaView>
   );

@@ -6,11 +6,6 @@ import left from "../assets/icons/left.png";
 import search from "../assets/icons/search.png";
 import cross from "../assets/icons/cross.png";
 import error from "../assets/icons/error.png";
-import plus from "../assets/icons/plus.png";
-import home from "../assets/icons/home.png";
-import user from "../assets/icons/user.png";
-import upload from "../assets/icons/upload.png";
-import edit from "../assets/icons/edit.png";
 
 import logo from "../assets/images/logo.png";
 import logo1 from "../assets/images/logo1.png";
@@ -46,11 +41,6 @@ export default {
   search,
   cross,
   error,
-  plus,
-  home,
-  user,
-  upload,
-  edit,
 
   logo,
   logo1,

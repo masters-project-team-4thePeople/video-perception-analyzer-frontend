@@ -22,7 +22,14 @@ const HomeHeader = ({ onSearch, searchBar }) => {
     if (value == 1) {
       navigation.navigate('Home', {
         userDetails: {}
-      }) } else {
+      });
+    } else if (value == 2) {
+      navigation.navigate('EditProfile');
+    } else if (value == 3) {
+      navigation.navigate('EditCategories');
+    } else if (value == 4) {
+      navigation.navigate('UploadVideo');
+    } else {
       clearLogin();
     }
   }
@@ -78,6 +85,10 @@ const HomeHeader = ({ onSearch, searchBar }) => {
               }}
             /></MenuTrigger>
           <MenuOptions customStyles={optionsStyles}>
+            <MenuOption value={1} text='Profile Information' />
+            <MenuOption value={2} text='Edit Profile' />
+            <MenuOption value={3} text='Edit Categories' />
+            <MenuOption value={4} text='Upload Video' />
             <MenuOption value={5} text='Logout' />
           </MenuOptions>
         </Menu>
