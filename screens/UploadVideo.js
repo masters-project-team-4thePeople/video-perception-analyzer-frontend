@@ -5,6 +5,7 @@ import { CustomButton, CustomInput } from '../components';
 const UploadVideo = () => {
   const onUpload = () => {
     console.log('Upload button clicked')
+    
   }
   
   return (
