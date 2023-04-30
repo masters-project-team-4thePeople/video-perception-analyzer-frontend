@@ -88,7 +88,7 @@ const EditCategories = () => {
 
   const saveChanges = () => {
     if(dummyCat.length >= 3) {
-      Alert.alert('Success', 'Your hanges were saved', [
+      Alert.alert('Success', 'Your changes were saved', [
         {
           text: 'Cancel'
         },
