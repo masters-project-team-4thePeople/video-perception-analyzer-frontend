@@ -8,6 +8,10 @@ import { CredentialsContext } from './components/CredentialsContext';
 import { LogBox } from 'react-native';
 import {Provider} from 'react-redux';
 import {Store} from './redux/store';
+import {Amplify} from 'aws-amplify';
+import awsconfig from './src/aws-exports';
+import 'react-native-url-polyfill/auto'
+Amplify.configure(awsconfig);
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
 
