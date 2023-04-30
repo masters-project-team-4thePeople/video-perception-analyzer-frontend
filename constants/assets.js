@@ -11,6 +11,8 @@ import home from "../assets/icons/home.png";
 import user from "../assets/icons/user.png";
 import upload from "../assets/icons/upload.png";
 import edit from "../assets/icons/edit.png";
+import collapse from "../assets/icons/collapsearrow.png"
+import expand from "../assets/icons/expand.png"
 
 import logo from "../assets/images/logo.png";
 import logo1 from "../assets/images/logo1.png";
@@ -51,6 +53,8 @@ export default {
   user,
   upload,
   edit,
+  collapse,
+  expand,
 
   logo,
   logo1,

@@ -8,6 +8,8 @@ import { ScrollView } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
 import { useNavigation } from '@react-navigation/native';
 import Footer from "../components/Footer";
+import Collapsible from 'react-native-collapsible';
+import Accordion from 'react-native-collapsible/Accordion';
 
 const EditCategories = () => {
   const navigation = useNavigation();
@@ -43,6 +45,17 @@ const EditCategories = () => {
     name: "Sports",
     selected: false
   }])
+
+  const SECTIONS = [
+    {
+      title: 'First',
+      content: 'Lorem ipsum...',
+    },
+    {
+      title: 'Second',
+      content: 'Lorem ipsum...',
+    },
+  ];
 
   useEffect(() => {
     addCatData()
@@ -139,19 +152,30 @@ const EditCategories = () => {
         <HomeHeader searchBar={false} />
         <View style={{alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%'}}><CustomButton text="Save Changes" type="SECONDARY" onPress={saveChanges}></CustomButton></View>
         <ScrollView>
-          <Text
-            style={{
-              fontSize: SIZES.medium,
-              fontFamily: FONTS.semiBold,
-              color: COLORS.primary,
-              alignContent: 'center',
-              textAlign: 'center',
-              paddingTop: 20
-            }}
-          >
-            Your Categories
-          </Text>
-          
+          <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontSize: SIZES.medium,
+                fontFamily: FONTS.semiBold,
+                color: COLORS.primary,
+                alignContent: 'center',
+                textAlign: 'center',
+                paddingTop: 20,
+                marginLeft: 130
+              }}
+            >
+              Your Categories 
+            </Text>
+            <Image
+              source={assets.collapse}
+              resizeMode="contain"
+              style={{
+                width: 20,
+                height: 20,
+                marginTop: 20
+              }}
+            />
+          </View>
           <FlatList
             style={{ marginHorizontal: 2 }}
             numColumns={2}
@@ -161,17 +185,30 @@ const EditCategories = () => {
             showsVerticalScrollIndicator={true} 
             contentContainerStyle={{ paddingBottom: 50 }}
           />
-          <Text
-            style={{
-              fontSize: SIZES.medium,
-              fontFamily: FONTS.semiBold,
-              color: COLORS.primary,
-              alignContent: 'center',
-              textAlign: 'center',
-            }}
-          >
-            Add Categories
-          </Text>
+          <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontSize: SIZES.medium,
+                fontFamily: FONTS.semiBold,
+                color: COLORS.primary,
+                alignContent: 'center',
+                textAlign: 'center',
+                paddingTop: 20,
+                marginLeft: 130
+              }}
+            >
+              Add Categories
+            </Text>
+            <Image
+              source={assets.collapse}
+              resizeMode="contain"
+              style={{
+                width: 20,
+                height: 20,
+                marginTop: 20
+              }}
+            />
+          </View>
           <FlatList
             style={{ marginHorizontal: 2 }}
             numColumns={2}
