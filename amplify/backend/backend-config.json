@@ -1,6 +1,6 @@
 {
   "auth": {
-    "vpa23d1b070": {
+    "vpab2e77d94": {
       "customAuth": false,
       "dependsOn": [],
       "frontendAuthConfig": {
@@ -28,7 +28,7 @@
     }
   },
   "storage": {
-    "vpas3": {
+    "vpastatics": {
       "dependsOn": [],
       "providerPlugin": "awscloudformation",
       "service": "S3"
