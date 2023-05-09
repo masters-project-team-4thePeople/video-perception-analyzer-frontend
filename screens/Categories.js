@@ -18,16 +18,31 @@ const Categories = () => {
   const [positionEnd, setPositionEnd] = useState(null)
   const {width} = Dimensions.get("window");
   const THRESHOLD = 1800;
-
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
   const {user} = storedCredentials ? storedCredentials : {};
   const {category} = useSelector(state=>state.userReducer);
+  const {userinfo} = useSelector(state=>state.userReducer);
 
 
-
-  const navigateToHome = () => {
+  const navigateToHome = async () => {
     if(category.length >= 3) {
-      navigation.navigate('Home')
+      var obj = {};
+      category.forEach(function(e) {
+        obj[e.id] = e.name
+      })
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: userinfo[0].id,
+          user_categories: obj})
+      };
+      try {
+        const response = await fetch('http://68.183.20.147/users-api/preferences/', requestOptions);
+        const json = await response.json();
+        navigation.navigate('Home')
+      } catch (error) {
+        console.error(error);
+      }
     } else {
       Alert.alert('Please select atleast 3 categories')
     }
@@ -51,7 +66,7 @@ const Categories = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FocusedStatusBar backgroundColor={COLORS.primary} />
-      <CategoriesHeader userName="Swathi"/>
+      <CategoriesHeader/>
       <View style={{alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%'}}><CustomButton text="Next" type="SECONDARY" onPress={navigateToHome}></CustomButton></View>
       <FlatList
             style={{marginHorizontal: 2}}

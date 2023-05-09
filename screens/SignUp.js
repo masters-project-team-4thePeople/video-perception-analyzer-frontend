@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { BarPasswordStrengthDisplay } from 'react-native-password-strength-meter';
 import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile, getAuth } from 'firebase/auth';
 import { auth } from '../firebase';
-
+import axios from 'axios';
 
 const SignUp = () => {
 
@@ -27,6 +27,7 @@ const SignUp = () => {
   const [isSignUpDisabled, setIsSignUpDisabled] = useState(true)
   const { height } = useWindowDimensions();
   const [username, setUsername] = useState('');
+  const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
   const [dob, setdob] = useState('');
   const [password, setPassword] = useState('');
@@ -35,6 +36,7 @@ const SignUp = () => {
   const [date, setDate] = useState(new Date())
   const inputRef = useRef(null);
   const authCurr = getAuth();
+  const baseUrlProfile = "http://68.183.20.147/users-api/profile/";
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -66,7 +68,7 @@ const SignUp = () => {
   const handleConfirm = (date) => {
     console.warn("A date has been picked: ", date);
     Moment.locale('en');
-    let dateInFormat = Moment(date).format('MM/DD/YYYY')
+    let dateInFormat = Moment(date).format('YYYY-MM-DD')
     setdob(dateInFormat);
     hideDatePicker();
   };
@@ -89,8 +91,28 @@ const SignUp = () => {
     setValue(value);
   };
 
+  const callUserProfileApi = async () => {
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: email,
+        first_name: username,
+        last_name: lastname,
+        email: email,
+        password: password,
+        birth_date: dob,
+        notification_id: '' })
+    };
+    try {
+      const response = await fetch('http://68.183.20.147/users-api/profile/', requestOptions);
+      const json = await response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onSignUpPressed = () => {
-    if(!username || !email || !dob || !password || !confirmPassword) {
+    if(!username || !email || !dob || !password || !confirmPassword || !lastname) {
       Alert.alert("Please fill the complete form");
     } else if(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/.test(email)) {
       Alert.alert("Please fill a valid email address")
@@ -108,6 +130,7 @@ const SignUp = () => {
             displayName: username
           }).then(() => {
             Alert.alert('Please check your email to activate your account.');
+            callUserProfileApi();
           })
         });
         navigation.navigate('Login')
@@ -126,10 +149,6 @@ const SignUp = () => {
 
   const handleEmail = () => {
 
-  }
-
-  const _handlePress = () => {
-    console.log(password)
   }
 
   const toggleIsSecure = () => {
@@ -166,7 +185,8 @@ const SignUp = () => {
           />
           <Text style={styles.primary}>Create Account</Text>
           <CustomInput placeholder="Email" value={email} setValue={setEmail}/>
-          <CustomInput placeholder="Display Name" value={username} setValue={setUsername} />
+          <CustomInput placeholder="First Name" value={username} setValue={setUsername} />
+          <CustomInput placeholder="Last Name" value={lastname} setValue={setLastname} />
           {!dob ? (<CustomButton text="Date of Birth" onPress={showDatePicker} type='DOB' />) :
             (<CustomInput placeholder="Date of Birth" value={dob.toString()} setValue={setdob} />)}
           {/* <CustomInput placeholder="Password" value={password} setValue={setPassword} secureTextEntry={true}/>
@@ -238,7 +258,7 @@ const styles = StyleSheet.create({
     padding: 20
   },
   logo: {
-    width: '80%', maxWidth: 500, marginBottom: 10
+    width: '80%', maxWidth: 500, marginBottom: 0
   },
   primary: {
     fontFamily: FONTS.semiBold,

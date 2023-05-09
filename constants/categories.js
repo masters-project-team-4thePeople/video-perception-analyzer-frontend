@@ -1,63 +1,63 @@
 const CategoriesData = [
   {
-    id: "1",
+    id: "film_and_animation",
     name: "Film and Animation",
     selected: false
   },
   {
-    id: "2",
+    id: "autos_and_vehicles",
     name: "Autos and Vehicles",
     selected: false
   },{
-    id: "3",
+    id: "music",
     name: "Music",
     selected: false
   },{
-    id: "4",
+    id: "pets_and_animals",
     name: "Pets & Animals",
     selected: false
   },{
-    id: "5",
+    id: "sports",
     name: "Sports",
     selected: false
   },{
-    id: "6",
+    id: "travel_and_events",
     name: "Travel and Events",
     selected: false
   },{
-    id: "7",
+    id: "gaming",
     name: "Gaming",
     selected: false
   },{
-    id: "8",
+    id: "people_and_blogs",
     name: "People and Blogs",
     selected: false
   },{
-    id: "9",
+    id: "comedy",
     name: "Comedy",
     selected: false
   },{
-    id: "10",
+    id: "entertainment",
     name: "Entertainment",
     selected: false
   },{
-    id: "11",
+    id: "news_and_politics",
     name: "News and Politics",
     selected: false
   },{
-    id: "12",
+    id: "how_to_and_style",
     name: "How-to and Style",
     selected: false
   },{
-    id: "13",
+    id: "education",
     name: "Education",
     selected: false
   },{
-    id: "14",
+    id: "science_and_technology",
     name: "Science and Technology",
     selected: false
   },{
-    id: "15",
+    id: "nonprofits_and_activism",
     name: "Nonprofits and Activism",
     selected: false
   }

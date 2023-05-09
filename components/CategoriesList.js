@@ -33,7 +33,6 @@ const CategoriesList = ({ item, index, onPress }) => {
             setSelectedCategory("")
             setTemp((temp) => [...temp]);
             dispatch(setSelectedCategories(tempVal));
-
         }
     }
     return (

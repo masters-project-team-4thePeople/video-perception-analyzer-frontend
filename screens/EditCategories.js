@@ -3,6 +3,7 @@ import { SafeAreaView, Text, View, FlatList, TouchableOpacity, StyleSheet, Image
 import { NFTCard, HomeHeader, FocusedStatusBar, CustomButton } from "../components";
 import { COLORS, FONTS, SIZES, assets, SHADOWS } from "../constants";
 import { useSelector, useDispatch } from "react-redux";
+import { setUserCategories } from "../redux/actions";
 import { CategoriesData } from "../constants";
 import { ScrollView } from "react-native";
 import Pressable from "react-native/Libraries/Components/Pressable/Pressable";
@@ -14,6 +15,9 @@ import Accordion from 'react-native-collapsible/Accordion';
 const EditCategories = () => {
   const navigation = useNavigation();
   const { category } = useSelector(state => state.userReducer);
+  const { usercategories } = useSelector(state => state.userReducer);
+  const { userinfo } = useSelector(state => state.userReducer);
+  
   const [categoriesData, setCategoriesData] = useState(CategoriesData);
   const [differenceCategoriesData, setDifferenceCategoriesData] = useState([])
   const [positionStart, setPositionStart] = useState(null);
@@ -22,46 +26,35 @@ const EditCategories = () => {
   const [positionStart2, setPositionStart2] = useState(null);
   const [positionEnd2, setPositionEnd2] = useState(null);
   const [paused2, setPaused2] = useState(false);
+  const [dummyCat, setDummyCat] = useState([])
 
-  const [dummyCat, setDummyCat] = useState([{
-    id: "1",
-    name: "Film and Animation",
-    selected: false
-  },
-  {
-    id: "2",
-    name: "Autos and Vehicles",
-    selected: false
-  }, {
-    id: "3",
-    name: "Music",
-    selected: false
-  }, {
-    id: "4",
-    name: "Pets & Animals",
-    selected: false
-  },{
-    id: "5",
-    name: "Sports",
-    selected: false
-  }])
-
-  const SECTIONS = [
-    {
-      title: 'First',
-      content: 'Lorem ipsum...',
-    },
-    {
-      title: 'Second',
-      content: 'Lorem ipsum...',
-    },
-  ];
-
-  useEffect(() => {
+ useEffect(() => {
     addCatData()
   }, [])
 
   const addCatData = () => {
+    // let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
+    // try {
+    //   const response = await fetch(
+    //     string
+    //   );
+    //   const json = await response.json();
+    //   if (Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+    //     dispatch(setUserCategories(json["user_categories"]))
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    let temp = []
+    Object.keys(usercategories).forEach(function(key) {
+      let obj = {
+        id: key,
+        name: usercategories[key],
+        selected: false
+      }
+      temp.push(obj)
+    });
+    setDummyCat(temp)
     let data = categoriesData.filter(a => dummyCat.every(c => c.id !== a.id))
     setDifferenceCategoriesData(data)
   }
@@ -86,15 +79,32 @@ const EditCategories = () => {
     setDifferenceCategoriesData(addData)
   }
 
-  const saveChanges = () => {
+  const saveChanges = async () => {
     if(dummyCat.length >= 3) {
-      Alert.alert('Success', 'Your changes were saved', [
-        {
-          text: 'Cancel'
-        },
-        {text: 'Go to home', onPress: () => navigation.navigate('Home')},
-      ]);
-  
+      var obj = {};
+      dummyCat.forEach(function(e) {
+        obj[e.id] = e.name
+      })
+      const requestOptions = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          user_id: userinfo[0].id,
+          user_categories: obj})
+      };
+      try {
+        const response = await fetch('http://68.183.20.147/users-api/preferences/', requestOptions);
+        const json = await response.json();
+        Alert.alert('Success', 'Your changes were saved', [
+          {
+            text: 'Cancel'
+          },
+          {text: 'Go to home', onPress: () => navigation.navigate('Home')},
+        ]);
+      } catch (error) {
+        console.error(error);
+        
+      }
     } else {
       Alert.alert('Please select atleast 3 categories')
     }
@@ -149,7 +159,7 @@ const EditCategories = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <FocusedStatusBar backgroundColor={COLORS.primary}/>
-        <HomeHeader searchBar={false} />
+        <HomeHeader searchBar={2} />
         <View style={{alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%'}}><CustomButton text="Save Changes" type="SECONDARY" onPress={saveChanges}></CustomButton></View>
         <ScrollView>
           <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>

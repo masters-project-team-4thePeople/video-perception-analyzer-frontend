@@ -12,7 +12,7 @@ import { auth } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
 import { useSelector, useDispatch } from "react-redux";
-import { setUserName } from "../redux/actions";
+import { setUserInfo, setUserName } from "../redux/actions";
 
 const Login = () => {
 
@@ -31,7 +31,7 @@ const Login = () => {
           if(!user.user.emailVerified) {
             Alert.alert("Please verify your email to login");
           } else {
-            persistLogin({...user});
+            fetchUserDetails();
           }
         }, error => {
             if (error.code === 'auth/invalid-email' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
@@ -40,6 +40,21 @@ const Login = () => {
               Alert.alert('There was a problem with your request');
             }
         })
+    }
+
+    const fetchUserDetails = async () => {
+      let string = 'http://68.183.20.147/users-api/profile?username=' + username
+      try {
+        const response = await fetch(
+          string
+        );
+        const json = await response.json();
+        dispatch(setUserInfo([json]))
+        persistLogin(json);
+        return json;
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     const onForgotPasswordPressed = () => {

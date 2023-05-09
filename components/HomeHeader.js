@@ -5,11 +5,12 @@ import { COLORS, FONTS, SIZES, assets } from "../constants";
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setResetAction } from "../redux/actions";
 
 const HomeHeader = ({ onSearch, searchBar }) => {
   const { name } = useSelector(state => state.userReducer);
-
+  const dispatch = useDispatch();
   const openMenu = () => {
     setIsMenuOpen(true);
   }
@@ -31,6 +32,7 @@ const HomeHeader = ({ onSearch, searchBar }) => {
     AsyncStorage.removeItem('vpaCredentials')
       .then(() => {
         setStoredCredentials("")
+        dispatch({ type: 'RESET_STATE' });
       }
       )
       .catch((error) => console.error(error));
@@ -94,7 +96,7 @@ const HomeHeader = ({ onSearch, searchBar }) => {
           Hello, {name} 👋
         </Text>
 
-        {searchBar ? <Text
+        {searchBar == 1 ? <Text
           style={{
             fontFamily: FONTS.bold,
             fontSize: SIZES.large,
@@ -103,7 +105,7 @@ const HomeHeader = ({ onSearch, searchBar }) => {
           }}
         >
           Let's view your favorite videos
-        </Text> : <Text
+        </Text> : searchBar == 2 ? <Text
           style={{
             fontFamily: FONTS.bold,
             fontSize: SIZES.large,
@@ -112,10 +114,19 @@ const HomeHeader = ({ onSearch, searchBar }) => {
           }}
         >
           Change your categories selection
+        </Text> : <Text
+          style={{
+            fontFamily: FONTS.bold,
+            fontSize: SIZES.large,
+            color: COLORS.white,
+            marginTop: SIZES.base / 2,
+          }}
+        >
+          Let's see your uploads
         </Text>}
 
       </View>
-      {searchBar ?
+      {searchBar == 1 ?
         <View style={{ marginTop: SIZES.font }}>
           <View
             style={{

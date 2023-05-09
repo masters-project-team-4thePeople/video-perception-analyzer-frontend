@@ -1,34 +1,68 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import { assets } from "../constants";
 import * as Animatable from "react-native-animatable";
+import { useSelector, useDispatch } from "react-redux";
+import { setUserCategories } from "../redux/actions";
+import { async } from "@firebase/util";
 
 const Welcome = () => {
-    const navigator = useNavigation();
-    setTimeout(() => {
-        navigator.navigate('Categories')
-    }, 3000)
-    return (
-        <View style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center'
-        }}>
-            <Text style={{fontSize: '30'}}>Welcome to</Text>
-            <Animatable.Image
-            animation="zoomIn"
-            source={assets.vpa}
-            resizeMode="contain"
-            style={{height: '20%'}}
-          />
-          <View>
-            <Text style={{fontSize: '20'}}>{"\n"}Getting your profile ready...{"\n"}</Text>
-            <ActivityIndicator size='large'></ActivityIndicator>
-          </View>
-        </View>
-    );
+  const navigator = useNavigation();
+  const { userinfo } = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
+  const [navigateToHome, setNavigateToHome] = useState(false)
+
+  setTimeout(() => {
+    if (navigateToHome) {
+      navigator.navigate('Home')
+    } else {
+      navigator.navigate('Categories')
+    }
+  }, 3000)
+
+  const loadUserCategoriesInfo = async () => {
+    let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
+    try {
+      const response = await fetch(
+        string
+      );
+      const json = await response.json();
+      if (Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+        dispatch(setUserCategories(json["user_categories"]))
+        setNavigateToHome(true)
+      } else {
+        setNavigateToHome(false)
+      }
+    } catch (error) {
+      console.error(error);
+      setNavigateToHome(false)
+    }
+  }
+
+  useEffect(() => {
+    loadUserCategoriesInfo()
+  }, [])
+  return (
+    <View style={{
+      height: '100%',
+      width: '100%',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }}>
+      <Text style={{ fontSize: '30' }}>Welcome to</Text>
+      <Animatable.Image
+        animation="zoomIn"
+        source={assets.vpa}
+        resizeMode="contain"
+        style={{ height: '20%' }}
+      />
+      <View>
+        <Text style={{ fontSize: '20' }}>{"\n"}Getting your profile ready...{"\n"}</Text>
+        <ActivityIndicator size='large'></ActivityIndicator>
+      </View>
+    </View>
+  );
 };
 
 export default Welcome;

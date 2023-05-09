@@ -6,9 +6,13 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-m
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
 import CustomButton from "./CustomButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setResetAction } from "../redux/actions";
+
 
 const CategoriesHeader = ({ onSearch }) => {
+  const {category} = useSelector(state=>state.userReducer);
+  const dispatch = useDispatch();
   const openMenu = () => {
     setIsMenuOpen(true);
   }
@@ -36,6 +40,7 @@ const CategoriesHeader = ({ onSearch }) => {
     AsyncStorage.removeItem('vpaCredentials')
       .then(() => {
         setStoredCredentials("")
+        dispatch({ type: 'RESET_STATE' });
       }
       )
       .catch((error) => console.error(error));
@@ -83,8 +88,6 @@ const CategoriesHeader = ({ onSearch }) => {
               }}
             /></MenuTrigger>
           <MenuOptions customStyles={optionsStyles}>
-            <MenuOption value={1} text='Profile Information' />
-            <MenuOption value={2} text='Edit Profile' />
             <MenuOption value={5} text='Logout' />
           </MenuOptions>
         </Menu>

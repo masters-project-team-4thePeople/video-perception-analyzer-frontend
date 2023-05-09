@@ -74,7 +74,7 @@ const Home = ({route}) => {
             renderItem={({ item }) => <NFTCard data={item} paused={paused}/>}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={<HomeHeader onSearch={handleSearch} searchBar={true}/>}
+            ListHeaderComponent={<HomeHeader onSearch={handleSearch} searchBar={1}/>}
           />
         </View>
 

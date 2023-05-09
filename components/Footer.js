@@ -1,10 +1,13 @@
-import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { COLORS, NFTData, assets, SIZES } from "../constants";
+import {launchImageLibraryAsync} from "expo-image-picker";
+import { uploadFile } from "../utility/upload";
 
 const Footer = () => {
     const navigation = useNavigation();
+    const [selectedImage, setSelectedImage] = useState(null);
     const navigateToHome = () => {
         navigation.navigate('Home')
     }
@@ -13,8 +16,18 @@ const Footer = () => {
         navigation.navigate('EditProfile')
     }
 
-    const navigateToUpload = () => {
-        navigation.navigate('UploadVideo')
+    const navigateToUpload = async () => {
+        let pickerResult = await launchImageLibraryAsync({
+            mediaTypes: "Videos"
+          });
+          if (pickerResult.canceled === true) {
+            return;
+          }
+          console.log(pickerResult);
+          uploadFile(pickerResult).then(() => {
+            Alert.alert('Your file has been uploaded successfully.')
+          })
+          setSelectedImage({ localUri: pickerResult.assets });
     }
 
     const navigateToEdit = () => {
