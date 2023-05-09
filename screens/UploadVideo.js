@@ -3,10 +3,12 @@ import { SafeAreaView, View, Text} from "react-native";
 import { CustomButton, CustomInput } from '../components';
 import {launchImageLibraryAsync} from "expo-image-picker";
 import { uploadFile } from "../utility/upload";
+import { useSelector, useDispatch } from "react-redux";
 
 const UploadVideo = () => {
 
   const [selectedImage, setSelectedImage] = useState(null);
+  const { userinfo } = useSelector(state => state.userReducer);
 
   let openImagePickerAsync = async () => {
     let pickerResult = await launchImageLibraryAsync({
@@ -16,7 +18,7 @@ const UploadVideo = () => {
       return;
     }
     console.log(pickerResult);
-    uploadFile(pickerResult)
+    uploadFile(pickerResult, userinfo[0].id)
     setSelectedImage({ localUri: pickerResult.assets });
   };
 

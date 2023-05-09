@@ -4,9 +4,11 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS, NFTData, assets, SIZES } from "../constants";
 import {launchImageLibraryAsync} from "expo-image-picker";
 import { uploadFile } from "../utility/upload";
+import { useSelector, useDispatch } from "react-redux";
 
 const Footer = () => {
     const navigation = useNavigation();
+    const { userinfo } = useSelector(state => state.userReducer);
     const [selectedImage, setSelectedImage] = useState(null);
     const navigateToHome = () => {
         navigation.navigate('Home')
@@ -24,7 +26,7 @@ const Footer = () => {
             return;
           }
           console.log(pickerResult);
-          uploadFile(pickerResult).then(() => {
+          uploadFile(pickerResult, userinfo[0].username).then(() => {
             Alert.alert('Your file has been uploaded successfully.')
           })
           setSelectedImage({ localUri: pickerResult.assets });
