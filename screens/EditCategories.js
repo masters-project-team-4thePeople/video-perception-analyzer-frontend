@@ -41,8 +41,8 @@ const EditCategories = () => {
           string
         );
         const json = await response.json();
-        if (Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
-          let temp = []
+        if (json && json["user_categories"]&&Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+          let temp = dummyCat
           Object.keys(json["user_categories"]).forEach(function (key) {
             let obj = {
               id: key,

@@ -1,4 +1,5 @@
 import { Storage } from 'aws-amplify';
+import { Alert } from 'react-native';
 ///// upload image ////
 const fetchImageUri = async (uri) => {
     const response = await fetch(uri);
@@ -27,6 +28,7 @@ export const uploadFile = async (file, userinfo) => {
       const json = await response.json();
       console.log(json)
     } catch (error) {
+      Alert.alert('Error occured while uploading')
       console.error(error);
     }
   }

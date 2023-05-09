@@ -33,13 +33,16 @@ const Categories = () => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: userinfo[0].id,
+        body: JSON.stringify({ 
+          user_id: userinfo[0].id,
           user_categories: obj})
       };
       try {
-        const response = await fetch('http://68.183.20.147/users-api/preferences/', requestOptions);
-        const json = await response.json();
-        navigation.navigate('Home')
+        fetch('http://68.183.20.147/users-api/preferences/', requestOptions)
+        .then(response => {
+          const json = response.json();
+          navigation.navigate('Home')
+        })
       } catch (error) {
         console.error(error);
       }

@@ -13,13 +13,13 @@ const Welcome = () => {
   const dispatch = useDispatch();
   const [navigateToHome, setNavigateToHome] = useState(false)
 
-  setTimeout(() => {
+  const setNavigation = () => {
     if (navigateToHome) {
       navigator.navigate('Home')
     } else {
       navigator.navigate('Categories')
     }
-  }, 3000)
+  }
 
   const loadUserCategoriesInfo = async () => {
     let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
@@ -28,21 +28,21 @@ const Welcome = () => {
         string
       );
       const json = await response.json();
-      if (Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+      if (json && json["user_categories"] && Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
         dispatch(setUserCategories(json["user_categories"]))
-        setNavigateToHome(true)
+        navigator.navigate('Home')
       } else {
-        setNavigateToHome(false)
+        navigator.navigate('Categories')
       }
     } catch (error) {
-      console.error(error);
-      setNavigateToHome(false)
+      console.error('LoadUserError' + error);
     }
   }
 
   useEffect(() => {
     loadUserCategoriesInfo()
   }, [])
+
   return (
     <View style={{
       height: '100%',
