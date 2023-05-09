@@ -7,6 +7,25 @@ const fetchImageUri = async (uri) => {
     return blob;
   }
   
+const callVideoMetaData = async (video_url, title, duration) => {
+  const data = new FormData();
+  data.append('video_url', video_url)
+  data.append('video_title', title)
+  data.append('video_duration', duration)
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    body: data
+  };
+  try {
+    const response = await fetch('http://68.183.20.147/videos-api/details/', requestOptions);
+    const json = await response.json();
+  } catch (error) {
+    Alert.alert('Error occured while uploading')
+    console.error(error);
+  }
+}
+
 export const uploadFile = async (file, userinfo) => {
   console.log(userinfo)
   // const video = await fetchImageUri(file.assets[0].uri);
@@ -27,6 +46,8 @@ export const uploadFile = async (file, userinfo) => {
       const response = await fetch('http://68.183.20.147/videos-api/spaces/', requestOptions);
       const json = await response.json();
       console.log(json)
+      callVideoMetaData(json["video_url"], file.assets[0].fileName, file.assets[0].duration);
+      return json
     } catch (error) {
       Alert.alert('Error occured while uploading')
       console.error(error);

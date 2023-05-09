@@ -22,20 +22,24 @@ const Welcome = () => {
   }
 
   const loadUserCategoriesInfo = async () => {
+    if(userinfo && userinfo[0] && userinfo[0].id) {
     let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
-    try {
-      const response = await fetch(
-        string
-      );
-      const json = await response.json();
-      if (json && json["user_categories"] && Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
-        dispatch(setUserCategories(json["user_categories"]))
-        navigator.navigate('Home')
-      } else {
-        navigator.navigate('Categories')
+      try {
+        const response = await fetch(
+          string
+        );
+        const json = await response.json();
+        if (json && json["user_categories"] && Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+          dispatch(setUserCategories(json["user_categories"]))
+          navigator.navigate('Home')
+        } else {
+          navigator.navigate('Categories')
+        }
+      } catch (error) {
+        console.error('LoadUserError' + error);
       }
-    } catch (error) {
-      console.error('LoadUserError' + error);
+    } else {
+      navigator.navigate('Home')
     }
   }
 
