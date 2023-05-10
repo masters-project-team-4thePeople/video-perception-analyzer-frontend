@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import { View, SafeAreaView, FlatList, Dimensions, Text, Image, TouchableOpacity } from "react-native";
 import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
 import { COLORS, NFTData, assets, SIZES } from "../constants";
@@ -7,6 +7,8 @@ import { CredentialsContext } from '../components/CredentialsContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import Footer from "../components/Footer";
+import { useSelector, useDispatch } from "react-redux";
+import { setVideoPlaying } from "../redux/actions";
 
 const Home = ({route}) => {
   const navigation = useNavigation();
@@ -15,7 +17,9 @@ const Home = ({route}) => {
   const [positionStart, setPositionStart] = useState(null)
   const [positionEnd, setPositionEnd] = useState(null)
   const {width} = Dimensions.get("window");
+  const dispatch = useDispatch();
   const THRESHOLD = 1800;
+  const [isVisible, setIsVisible] = useState(false)
 
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
   const {user} = storedCredentials ? storedCredentials : {};
@@ -61,7 +65,19 @@ const Home = ({route}) => {
     setPositionEnd(e.nativeEvent.layouty + e.nativeEvent.layout.height - THRESHOLD)
   }
 
-  
+  const _onViewableItemsChanged = useCallback(({ viewableItems }) => {
+      if(viewableItems[0]){
+        if(viewableItems[0].isViewable){
+          setIsVisible(true)
+        }
+        dispatch(setVideoPlaying([viewableItems[0]["item"]]))
+      }
+
+  }, []);
+
+  const _viewabilityConfig = {
+    itemVisiblePercentThreshold: 100
+  }  
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -71,8 +87,10 @@ const Home = ({route}) => {
           <FlatList
             onScroll={handleScroll}
             data={nftData}
-            renderItem={({ item }) => <NFTCard data={item} paused={paused}/>}
+            renderItem={({ item }) => <NFTCard data={item}/>}
             keyExtractor={(item) => item.id}
+            onViewableItemsChanged={_onViewableItemsChanged}
+            viewabilityConfig={_viewabilityConfig}
             showsVerticalScrollIndicator={false}
             ListHeaderComponent={<HomeHeader onSearch={handleSearch} searchBar={1}/>}
           />

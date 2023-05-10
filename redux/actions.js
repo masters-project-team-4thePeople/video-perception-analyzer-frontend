@@ -3,6 +3,7 @@ export const SET_USER_NAME = 'SET_USER_NAME';
 export const SET_USER_INFO = 'SET_USER_INFO';
 export const SET_RESET_ACTION = 'SET_RESET_ACTION';
 export const SET_USER_CATEGORIES = 'SET_USER_CATEGORIES';
+export const SET_VIDEO_PLAYING = 'SET_VIDEO_PLAYING'
 
 export const setSelectedCategories = category => dispatch => {
     dispatch({
@@ -37,3 +38,11 @@ export const setResetAction = () => dispatch => {
         type: SET_RESET_ACTION
     });
 };
+
+export const setVideoPlaying = video => dispatch => {
+    dispatch({
+        type: SET_VIDEO_PLAYING,
+        payload: video
+    });
+};
+

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { View, Image, StyleSheet, ScrollView, Dimensions } from "react-native";
 
@@ -8,34 +8,28 @@ import { RectButton, CircleButton } from "./Button";
 // import Video from 'react-native-video';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import { Button } from "react-native-web";
+import { useSelector, useDispatch } from "react-redux";
 
-const NFTCard = ({ data, paused }) => {
+
+const NFTCard = ({ data }) => {
   const navigation = useNavigation();
-  const video = React.useRef(null);
+  // const video = React.useRef(null);
   const [status, setStatus] = useState({});
-  // const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true);
   const [positionStart, setPositionStart] = useState(null)
   const [positionEnd, setPositionEnd] = useState(null)
   const THRESHOLD = 100;
+  const {video} = useSelector(state=>state.userReducer);
 
   const {width} = Dimensions.get("window");
 
-  // handleVideoLayout = (e) => {
-  //   console.log(e.y)
-  //   const {height} = Dimensions.get("window");
-  //   setPositionStart(e.y - height + THRESHOLD);
-  //   setPositionEnd(e.y + e.height - THRESHOLD)
-  // }
-
-  // handleScroll = (e) => {
-  //   console.log(e.y)
-  //   const scrollPosition = e.nativeEvent.contentOffset.y;
-  //   if (scrollPosition > positionStart && scrollPosition < positionEnd && paused) {
-  //     setPaused(false)
-  //   } else if ((scrollPosition > positionEnd || scrollPosition < positionStart) && !paused) {
-  //     setPaused(true);
-  //   }
-  // }
+  useEffect(() => {
+    if(video && video[0] && video[0].id && video[0].id == data.id) {
+      setPaused(true)
+    } else {
+      setPaused(false)
+    }
+  },[video])
 
   return (
       <View
@@ -66,10 +60,11 @@ const NFTCard = ({ data, paused }) => {
           <Video
           ref={video}
           style={styles.video}
-          source={data.video}
+          source={{uri: data.video}}
           useNativeControls
           resizeMode="contain"
           isLooping
+          isMuted={false}
           onPlaybackStatusUpdate={setStatus}
           shouldPlay={paused}
           // onLayout={handleVideoLayout}

@@ -1,5 +1,6 @@
 import { Storage } from 'aws-amplify';
 import { Alert } from 'react-native';
+
 ///// upload image ////
 const fetchImageUri = async (uri) => {
     const response = await fetch(uri);
@@ -7,7 +8,7 @@ const fetchImageUri = async (uri) => {
     return blob;
   }
   
-const callVideoMetaData = async (video_url, title, duration) => {
+const callVideoMetaData = async (video_url, title, duration, userid) => {
   const data = new FormData();
   data.append('video_url', video_url)
   data.append('video_title', title)
@@ -20,14 +21,32 @@ const callVideoMetaData = async (video_url, title, duration) => {
   try {
     const response = await fetch('http://68.183.20.147/videos-api/details/', requestOptions);
     const json = await response.json();
+    callInformationDetailsAddition(userid, json["video_id"])
   } catch (error) {
     Alert.alert('Error occured while uploading')
     console.error(error);
   }
 }
 
-export const uploadFile = async (file, userinfo) => {
-  console.log(userinfo)
+const callInformationDetailsAddition = async (user_id, video_id) => {
+  const data = new FormData();
+  data.append('user_id', user_id)
+  data.append('video_id', video_id)
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'multipart/form-data' },
+    body: data
+  };
+  try {
+    const response = await fetch('http://68.183.20.147/videos-api/information/', requestOptions);
+    const json = await response.json();
+  } catch (error) {
+    Alert.alert('Error occured while uploading')
+    console.error(error);
+  }
+}
+
+export const uploadFile = async (file, userinfo, userid) => {
   // const video = await fetchImageUri(file.assets[0].uri);
   const data = new FormData();
   data.append('user_name', userinfo)
@@ -42,11 +61,10 @@ export const uploadFile = async (file, userinfo) => {
       body: data
     };
     try {
-      // console.log(data)
       const response = await fetch('http://68.183.20.147/videos-api/spaces/', requestOptions);
       const json = await response.json();
-      console.log(json)
-      callVideoMetaData(json["video_url"], file.assets[0].fileName, file.assets[0].duration);
+      callVideoMetaData(json["video_url"], file.assets[0].fileName, file.assets[0].duration, userid);
+      Alert.alert('Your file has been uploaded successfully.')
       return json
     } catch (error) {
       Alert.alert('Error occured while uploading')

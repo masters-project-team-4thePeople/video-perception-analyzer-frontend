@@ -26,8 +26,7 @@ const Footer = () => {
             return;
           }
           console.log(pickerResult);
-          uploadFile(pickerResult, userinfo[0].username).then(() => {
-            Alert.alert('Your file has been uploaded successfully.')
+          uploadFile(pickerResult, userinfo[0].username, userinfo[0].id).then(() => {
           })
           setSelectedImage({ localUri: pickerResult.assets });
     }
