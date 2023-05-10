@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { View, Image, StyleSheet, ScrollView, Dimensions } from "react-native";
 
 import { COLORS, SIZES, SHADOWS, assets } from "../constants";
@@ -13,13 +13,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 const NFTCard = ({ data }) => {
   const navigation = useNavigation();
-  // const video = React.useRef(null);
+  const videoRef = React.useRef(null);
   const [status, setStatus] = useState({});
   const [paused, setPaused] = useState(true);
   const [positionStart, setPositionStart] = useState(null)
   const [positionEnd, setPositionEnd] = useState(null)
   const THRESHOLD = 100;
   const {video} = useSelector(state=>state.userReducer);
+  const screenIsFocused = useIsFocused();
 
   const {width} = Dimensions.get("window");
 
@@ -58,7 +59,7 @@ const NFTCard = ({ data }) => {
             }}
           /> */}
           <Video
-          ref={video}
+          ref={videoRef}
           style={styles.video}
           source={{uri: data.video}}
           useNativeControls
@@ -66,7 +67,7 @@ const NFTCard = ({ data }) => {
           isLooping
           isMuted={false}
           onPlaybackStatusUpdate={setStatus}
-          shouldPlay={paused}
+          shouldPlay={paused && screenIsFocused}
           // onLayout={handleVideoLayout}
           />
           {/* <View style={styles.buttons}>
@@ -79,7 +80,7 @@ const NFTCard = ({ data }) => {
 
         <SubInfo />
 
-        <View style={{ width: "100%", padding: SIZES.font }}>
+        <View style={{ width: "100%", padding: 20 }}>
           <NFTTitle
             title={data.name}
             subTitle={data.creator}

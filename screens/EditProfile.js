@@ -73,7 +73,7 @@ const EditProfile = () => {
           >
             Your Uploads
           </Text>
-            {tableData.length > 1 ? <DataTable style={styles.container}>
+            {Object.keys(tableData).length > 1 ? <DataTable style={styles.container}>
             <DataTable.Header style={styles.tableHeader}>
               <DataTable.Title>Video Title</DataTable.Title>
               <DataTable.Title>Video Status</DataTable.Title>

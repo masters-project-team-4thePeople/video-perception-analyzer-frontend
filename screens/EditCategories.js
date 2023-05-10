@@ -103,6 +103,8 @@ const EditCategories = () => {
       try {
         const response = await fetch('http://68.183.20.147/users-api/preferences/', requestOptions);
         const json = await response.json();
+        dispatch(setUserCategories([]))
+        dispatch(setUserCategories(json["user_categories"]))
         Alert.alert('Success', 'Your changes were saved', [
           {
             text: 'Cancel'

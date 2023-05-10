@@ -9,7 +9,8 @@ const NFTData = [
     description:
       "A video description is a piece of metadata that helps YouTube understand the content of a video. Descriptions that are well optimized can lead to higher rankings in YouTube search.",
     // video: assets.video,
-    video: "https://4-the-people-masters-project-vpa-videos.sfo3.cdn.digitaloceanspaces.com/film-animation/a-short-animated-film-by-me-enjoy-shorts-film-shortfilm-720-ytshorts.savetube.me.mp4"
+    video: "https://4-the-people-masters-project-vpa-videos.sfo3.cdn.digitaloceanspaces.com/film-animation/a-short-animated-film-by-me-enjoy-shorts-film-shortfilm-720-ytshorts.savetube.me.mp4",
+    recommendationReason: 'The reason a particular video is recommended to you is based on a combination of factors, including your watch history, search history, and interests. Our algorithms analyze your activity on the platform, including the videos you have watched, liked, and shared, and then suggest new videos that we think you will enjoy based on your preferences. Additionally, we might recommend videos that are popular or trending among users with similar interests, to broaden your horizons. Our goal is to help you discover new content that you will find interesting and engaging'
   },
   {
     id: "NFT-02",
@@ -18,7 +19,7 @@ const NFTData = [
     price: 200,
     description:
       "The action painter abstract expressionists were directly influenced by automatism. Pollock channelled this into producing gestural. Nulla sed velit erat vitae leo sem inceptos diam fames arcu hendrerit, quis ultrices in eleifend posuere ipsum conubia porttitor felis.",
-    video: "https://4-the-people-masters-project-vpa-videos.sfo3.cdn.digitaloceanspaces.com/film-animation/clean-after-eating-snack-mayamax-cocometa-720-ytshorts.savetube.me.mp4",
+    video: "https://4-the-people-masters-project-vpa-videos.sfo3.cdn.digitaloceanspaces.com/film-animation/clean-after-eating-snack-mayamax-cocometa-720-ytshorts.savetube.me.mp4"
     
   },
   {

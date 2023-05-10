@@ -1,18 +1,23 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useEffect } from "react";
 import { View, SafeAreaView, FlatList, Dimensions, Text, Image, TouchableOpacity } from "react-native";
 import { NFTCard, HomeHeader, FocusedStatusBar } from "../components";
-import { COLORS, NFTData, assets, SIZES } from "../constants";
+import { COLORS, NFTData,categoriesVideoData, assets, SIZES } from "../constants";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CredentialsContext } from '../components/CredentialsContext';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 import Footer from "../components/Footer";
 import { useSelector, useDispatch } from "react-redux";
-import { setVideoPlaying } from "../redux/actions";
+import { setUserCategories, setVideoPlaying } from "../redux/actions";
+import {shuffle} from 'lodash'
 
 const Home = ({route}) => {
   const navigation = useNavigation();
-  const [nftData, setNftData] = useState(NFTData);
+  // const [nftData, setNftData] = useState(NFTData);
+  const [nftData, setNftData] = useState([]);
+  const [videoViewingData, setVideoViewingData] = useState([]);
+  // const [videoCategoriesData, setVideoCategoriesData] = useState([]);
+  const { usercategories } = useSelector(state => state.userReducer);
   const [paused, setPaused] = useState(false);
   const [positionStart, setPositionStart] = useState(null)
   const [positionEnd, setPositionEnd] = useState(null)
@@ -20,6 +25,8 @@ const Home = ({route}) => {
   const dispatch = useDispatch();
   const THRESHOLD = 1800;
   const [isVisible, setIsVisible] = useState(false)
+  // const [userCategories, setUserCategories] = useState([])
+  
 
   const {storedCredentials, setStoredCredentials} = useContext(CredentialsContext);
   const {user} = storedCredentials ? storedCredentials : {};
@@ -32,17 +39,33 @@ const Home = ({route}) => {
     .catch((error) => console.error(error));
   }
 
+  const loadCategoriesOfUser = async() => {
+    // console.log(usercategories)
+    let showData = []
+    Object.keys(usercategories).forEach(e=> {
+      showData.push(...categoriesVideoData[e])
+    })
+    console.log(showData)
+    showData = shuffle(showData)
+    setVideoViewingData(showData)
+    setNftData(showData)
+  }
+
+  useEffect(()=>{
+    loadCategoriesOfUser()
+  }, [usercategories])
+
   const handleSearch = (value) => {
     if (value.length === 0) {
-      setNftData(NFTData);
+      setNftData(videoViewingData);
     }
 
-    const filteredData = NFTData.filter((item) =>
+    const filteredData = videoViewingData.filter((item) =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
 
     if (filteredData.length === 0) {
-      setNftData(NFTData);
+      setNftData(videoViewingData);
     } else {
       setNftData(filteredData);
     }
