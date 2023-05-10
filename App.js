@@ -1,7 +1,7 @@
 import { useFonts } from 'expo-font';
 import RootStack from './navigators/RootStack';
 import { MenuProvider } from 'react-native-popup-menu';
-import AppLoading from 'expo';
+import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
 import { CredentialsContext } from './components/CredentialsContext';
