@@ -13,36 +13,40 @@ const Welcome = () => {
   const dispatch = useDispatch();
   const [navigateToHome, setNavigateToHome] = useState(false)
 
-  setTimeout(() => {
+  const setNavigation = () => {
     if (navigateToHome) {
       navigator.navigate('Home')
     } else {
       navigator.navigate('Categories')
     }
-  }, 3000)
+  }
 
   const loadUserCategoriesInfo = async () => {
+    if(userinfo && userinfo[0] && userinfo[0].id) {
     let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
-    try {
-      const response = await fetch(
-        string
-      );
-      const json = await response.json();
-      if (Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
-        dispatch(setUserCategories(json["user_categories"]))
-        setNavigateToHome(true)
-      } else {
-        setNavigateToHome(false)
+      try {
+        const response = await fetch(
+          string
+        );
+        const json = await response.json();
+        if (json && json["user_categories"] && Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+          dispatch(setUserCategories(json["user_categories"]))
+          navigator.navigate('Home')
+        } else {
+          navigator.navigate('Categories')
+        }
+      } catch (error) {
+        console.error('LoadUserError' + error);
       }
-    } catch (error) {
-      console.error(error);
-      setNavigateToHome(false)
+    } else {
+      navigator.navigate('Home')
     }
   }
 
   useEffect(() => {
     loadUserCategoriesInfo()
   }, [])
+
   return (
     <View style={{
       height: '100%',

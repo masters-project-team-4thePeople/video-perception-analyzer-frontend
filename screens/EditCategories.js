@@ -17,7 +17,7 @@ const EditCategories = () => {
   const { category } = useSelector(state => state.userReducer);
   const { usercategories } = useSelector(state => state.userReducer);
   const { userinfo } = useSelector(state => state.userReducer);
-  
+
   const [categoriesData, setCategoriesData] = useState(CategoriesData);
   const [differenceCategoriesData, setDifferenceCategoriesData] = useState([])
   const [positionStart, setPositionStart] = useState(null);
@@ -27,36 +27,43 @@ const EditCategories = () => {
   const [positionEnd2, setPositionEnd2] = useState(null);
   const [paused2, setPaused2] = useState(false);
   const [dummyCat, setDummyCat] = useState([])
+  const dispatch = useDispatch();
 
- useEffect(() => {
+
+  useEffect(() => {
     addCatData()
   }, [])
 
-  const addCatData = () => {
-    // let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
-    // try {
-    //   const response = await fetch(
-    //     string
-    //   );
-    //   const json = await response.json();
-    //   if (Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
-    //     dispatch(setUserCategories(json["user_categories"]))
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    let temp = []
-    Object.keys(usercategories).forEach(function(key) {
-      let obj = {
-        id: key,
-        name: usercategories[key],
-        selected: false
-      }
-      temp.push(obj)
-    });
-    setDummyCat(temp)
-    let data = categoriesData.filter(a => dummyCat.every(c => c.id !== a.id))
-    setDifferenceCategoriesData(data)
+  const addCatData = async () => {
+      let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
+      try {
+        const response = await fetch(
+          string
+        );
+        const json = await response.json();
+        if (json && json["user_categories"]&&Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
+          let temp = dummyCat
+          Object.keys(json["user_categories"]).forEach(function (key) {
+            let obj = {
+              id: key,
+              name: json["user_categories"][key],
+              selected: false
+            };
+            temp.push(obj);
+          });
+          setDummyCat(temp)
+          categoriesData.sort((a, b) => a.id.localeCompare(b.id)); 
+          dummyCat.sort((a, b) => a.id.localeCompare(b.id))
+          let data = categoriesData.filter(({ id: id1 }) => !dummyCat.some(({ id: id2 }) => id2 === id1));
+          setDifferenceCategoriesData(data)
+        }
+      } catch (error) {
+        console.error(error);
+      } 
+      // categoriesData.sort((a, b) => a.id.localeCompare(b.id)); 
+      // dummyCat.sort((a, b) => a.id.localeCompare(b.id))
+      // let data = categoriesData.filter(({ id: id1 }) => !dummyCat.some(({ id: id2 }) => id2 === id1));
+      // setDifferenceCategoriesData(data)
   }
 
   const handlePressCross = (item) => {
@@ -80,17 +87,18 @@ const EditCategories = () => {
   }
 
   const saveChanges = async () => {
-    if(dummyCat.length >= 3) {
+    if (dummyCat.length >= 3) {
       var obj = {};
-      dummyCat.forEach(function(e) {
+      dummyCat.forEach(function (e) {
         obj[e.id] = e.name
       })
       const requestOptions = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           user_id: userinfo[0].id,
-          user_categories: obj})
+          user_categories: obj
+        })
       };
       try {
         const response = await fetch('http://68.183.20.147/users-api/preferences/', requestOptions);
@@ -99,11 +107,11 @@ const EditCategories = () => {
           {
             text: 'Cancel'
           },
-          {text: 'Go to home', onPress: () => navigation.navigate('Home')},
+          { text: 'Go to home', onPress: () => navigation.navigate('Home') },
         ]);
       } catch (error) {
         console.error(error);
-        
+
       }
     } else {
       Alert.alert('Please select atleast 3 categories')
@@ -158,79 +166,79 @@ const EditCategories = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <FocusedStatusBar backgroundColor={COLORS.primary}/>
-        <HomeHeader searchBar={2} />
-        <View style={{alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%'}}><CustomButton text="Save Changes" type="SECONDARY" onPress={saveChanges}></CustomButton></View>
-        <ScrollView>
-          <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontSize: SIZES.medium,
-                fontFamily: FONTS.semiBold,
-                color: COLORS.primary,
-                alignContent: 'center',
-                textAlign: 'center',
-                paddingTop: 20,
-                marginLeft: 130
-              }}
-            >
-              Your Categories 
-            </Text>
-            <Image
-              source={assets.collapse}
-              resizeMode="contain"
-              style={{
-                width: 20,
-                height: 20,
-                marginTop: 20
-              }}
-            />
-          </View>
-          <FlatList
-            style={{ marginHorizontal: 2 }}
-            numColumns={2}
-            data={dummyCat}
-            renderItem={renderIem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={true} 
-            contentContainerStyle={{ paddingBottom: 50 }}
+      <FocusedStatusBar backgroundColor={COLORS.primary} />
+      <HomeHeader searchBar={2} />
+      <View style={{ alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%' }}><CustomButton text="Save Changes" type="SECONDARY" onPress={saveChanges}></CustomButton></View>
+      <ScrollView>
+        <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
+          <Text
+            style={{
+              fontSize: SIZES.medium,
+              fontFamily: FONTS.semiBold,
+              color: COLORS.primary,
+              alignContent: 'center',
+              textAlign: 'center',
+              paddingTop: 20,
+              marginLeft: 130
+            }}
+          >
+            Your Categories
+          </Text>
+          <Image
+            source={assets.collapse}
+            resizeMode="contain"
+            style={{
+              width: 20,
+              height: 20,
+              marginTop: 20
+            }}
           />
-          <View style={{flexDirection: 'row', alignContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontSize: SIZES.medium,
-                fontFamily: FONTS.semiBold,
-                color: COLORS.primary,
-                alignContent: 'center',
-                textAlign: 'center',
-                paddingTop: 20,
-                marginLeft: 130
-              }}
-            >
-              Add Categories
-            </Text>
-            <Image
-              source={assets.collapse}
-              resizeMode="contain"
-              style={{
-                width: 20,
-                height: 20,
-                marginTop: 20
-              }}
-            />
-          </View>
-          <FlatList
-            style={{ marginHorizontal: 2 }}
-            numColumns={2}
-            data={differenceCategoriesData}
-            renderItem={renderIemFull}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={true}
-            contentContainerStyle={{ paddingBottom: 80 }}/>
-        </ScrollView>
-        <View>
-        <Footer/>
         </View>
+        <FlatList
+          style={{ marginHorizontal: 2 }}
+          numColumns={2}
+          data={dummyCat}
+          renderItem={renderIem}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{ paddingBottom: 50 }}
+        />
+        <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
+          <Text
+            style={{
+              fontSize: SIZES.medium,
+              fontFamily: FONTS.semiBold,
+              color: COLORS.primary,
+              alignContent: 'center',
+              textAlign: 'center',
+              paddingTop: 20,
+              marginLeft: 130
+            }}
+          >
+            Add Categories
+          </Text>
+          <Image
+            source={assets.collapse}
+            resizeMode="contain"
+            style={{
+              width: 20,
+              height: 20,
+              marginTop: 20
+            }}
+          />
+        </View>
+        <FlatList
+          style={{ marginHorizontal: 2 }}
+          numColumns={2}
+          data={differenceCategoriesData}
+          renderItem={renderIemFull}
+          keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{ paddingBottom: 80 }} />
+      </ScrollView>
+      <View>
+        <Footer />
+      </View>
     </SafeAreaView>
   );
 };

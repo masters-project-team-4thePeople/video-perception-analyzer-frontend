@@ -47,7 +47,7 @@ const RootStack = () => {
                             {storedCredentials ? (
                                 <>
                                     <Stack.Screen name='Welcome' component={Welcome}/>
-                                    <Stack.Screen name='Home' component={Home}  options={{gestureEnabled: false}}/>
+                                    <Stack.Screen name='Home' component={Home} options={{gestureEnabled: false}}/>
                                     <Stack.Screen name='Details' component={Details}/>
                                     <Stack.Screen name='Categories' component={Categories}/>
                                     <Stack.Screen name='EditProfile' component={EditProfile}/>
