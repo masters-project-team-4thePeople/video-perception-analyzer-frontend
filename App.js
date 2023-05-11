@@ -11,11 +11,6 @@ import {Store} from './redux/store';
 import {Amplify} from 'aws-amplify';
 import awsconfig from './src/aws-exports';
 import 'react-native-url-polyfill/auto';
-import {AppRegistry} from 'react-native';
-import {name as appName} from './app.json';
-
-AppRegistry.registerComponent(appName, () => App);
-registerRootComponent(App);
 Amplify.configure(awsconfig);
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
