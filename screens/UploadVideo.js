@@ -17,7 +17,6 @@ const UploadVideo = () => {
     if (pickerResult.canceled === true) {
       return;
     }
-    console.log(pickerResult);
     uploadFile(pickerResult, userinfo[0].id)
     setSelectedImage({ localUri: pickerResult.assets });
   };

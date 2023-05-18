@@ -40,12 +40,10 @@ const Home = ({route}) => {
   }
 
   const loadCategoriesOfUser = async() => {
-    // console.log(usercategories)
     let showData = []
     Object.keys(usercategories).forEach(e=> {
       showData.push(...categoriesVideoData[e])
     })
-    console.log(showData)
     showData = shuffle(showData)
     setVideoViewingData(showData)
     setNftData(showData)
@@ -82,7 +80,6 @@ const Home = ({route}) => {
   }
 
   const handleVideoLayout = (e) => {
-    console.log('video' + e.nativeEvent.layout.y)
     const {height} = Dimensions.get("window");
     setPositionStart(e.nativeEvent.layout.y - height + THRESHOLD);
     setPositionEnd(e.nativeEvent.layouty + e.nativeEvent.layout.height - THRESHOLD)

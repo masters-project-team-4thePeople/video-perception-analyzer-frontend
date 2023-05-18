@@ -66,7 +66,6 @@ const SignUp = () => {
   }
 
   const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
     Moment.locale('en');
     let dateInFormat = Moment(date).format('YYYY-MM-DD')
     setdob(dateInFormat);

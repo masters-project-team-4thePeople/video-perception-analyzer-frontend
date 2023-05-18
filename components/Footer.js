@@ -25,7 +25,6 @@ const Footer = () => {
           if (pickerResult.canceled === true) {
             return;
           }
-          console.log(pickerResult);
           uploadFile(pickerResult, userinfo[0].username, userinfo[0].id).then(() => {
           })
           setSelectedImage({ localUri: pickerResult.assets });

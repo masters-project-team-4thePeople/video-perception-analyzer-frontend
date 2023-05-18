@@ -36,7 +36,7 @@ const Welcome = () => {
           navigator.navigate('Categories')
         }
       } catch (error) {
-        console.error('LoadUserError' + error);
+        console.error(error);
       }
     } else {
       navigator.navigate('Home')

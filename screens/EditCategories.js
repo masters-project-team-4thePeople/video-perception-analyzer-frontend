@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import Footer from "../components/Footer";
 import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
+import {uniq} from 'lodash';
 
 const EditCategories = () => {
   const navigation = useNavigation();
@@ -28,7 +29,8 @@ const EditCategories = () => {
   const [paused2, setPaused2] = useState(false);
   const [dummyCat, setDummyCat] = useState([])
   const dispatch = useDispatch();
-
+  const [hideYourCategoriesValue, setHideCategories] = useState(false)
+  const [hideYourAddCategoriesValue, setHideAddCategories] = useState(false)
 
   useEffect(() => {
     addCatData()
@@ -43,6 +45,7 @@ const EditCategories = () => {
         const json = await response.json();
         if (json && json["user_categories"]&&Object.keys(json["user_categories"]) && Object.keys(json["user_categories"]).length > 0) {
           let temp = dummyCat
+          // temp = uniq(temp, x => x.id)
           Object.keys(json["user_categories"]).forEach(function (key) {
             let obj = {
               id: key,
@@ -84,6 +87,15 @@ const EditCategories = () => {
     addData.splice(ind, 1)
     setDummyCat(data)
     setDifferenceCategoriesData(addData)
+  }
+
+  const hideYourCategories = () => {
+    let val = !hideYourCategoriesValue
+    setHideCategories(val)
+  }
+  const onHideAddCategories = () => {
+    let val = !hideYourAddCategoriesValue
+    setHideAddCategories(val)
   }
 
   const saveChanges = async () => {
@@ -172,7 +184,7 @@ const EditCategories = () => {
       <HomeHeader searchBar={2} />
       <View style={{ alignItems: 'flex-end', alignContent: 'flex-end', marginLeft: '60%' }}><CustomButton text="Save Changes" type="SECONDARY" onPress={saveChanges}></CustomButton></View>
       <ScrollView>
-        <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
+        <TouchableOpacity onPress={hideYourCategories} style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
           <Text
             style={{
               fontSize: SIZES.medium,
@@ -186,26 +198,37 @@ const EditCategories = () => {
           >
             Your Categories
           </Text>
+          {hideYourCategoriesValue ? 
           <Image
-            source={assets.collapse}
+            source={assets.expand}
             resizeMode="contain"
             style={{
               width: 20,
               height: 20,
               marginTop: 20
             }}
-          />
-        </View>
-        <FlatList
-          style={{ marginHorizontal: 2 }}
-          numColumns={2}
-          data={dummyCat}
-          renderItem={renderIem}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ paddingBottom: 50 }}
-        />
-        <View style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
+          /> : <Image
+          source={assets.collapse}
+          resizeMode="contain"
+          style={{
+            width: 20,
+            height: 20,
+            marginTop: 20
+          }}
+        />}
+        </TouchableOpacity>
+        {!hideYourCategoriesValue ? 
+          <FlatList
+            style={{ marginHorizontal: 2 }}
+            numColumns={2}
+            data={dummyCat}
+            renderItem={renderIem}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={{ paddingBottom: 50 }}
+          /> : null}
+        
+        <TouchableOpacity onPress={onHideAddCategories} style={{ flexDirection: 'row', alignContent: 'center', alignItems: 'center' }}>
           <Text
             style={{
               fontSize: SIZES.medium,
@@ -219,16 +242,26 @@ const EditCategories = () => {
           >
             Add Categories
           </Text>
+          {hideYourAddCategoriesValue ? 
           <Image
-            source={assets.collapse}
+            source={assets.expand}
             resizeMode="contain"
             style={{
               width: 20,
               height: 20,
               marginTop: 20
             }}
-          />
-        </View>
+          /> : <Image
+          source={assets.collapse}
+          resizeMode="contain"
+          style={{
+            width: 20,
+            height: 20,
+            marginTop: 20
+          }}
+        /> }
+        </TouchableOpacity>
+        {!hideYourAddCategoriesValue ? 
         <FlatList
           style={{ marginHorizontal: 2 }}
           numColumns={2}
@@ -236,7 +269,7 @@ const EditCategories = () => {
           renderItem={renderIemFull}
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={true}
-          contentContainerStyle={{ paddingBottom: 80 }} />
+          contentContainerStyle={{ paddingBottom: 80 }} /> : null}
       </ScrollView>
       <View>
         <Footer />
