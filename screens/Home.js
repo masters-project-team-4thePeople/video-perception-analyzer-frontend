@@ -34,6 +34,7 @@ const Home = ({route}) => {
   const clearLogin = () => {
     AsyncStorage.removeItem('vpaCredentials')
     .then(() => {
+      setUserCategories([])
       setStoredCredentials("")}
     )
     .catch((error) => console.error(error));

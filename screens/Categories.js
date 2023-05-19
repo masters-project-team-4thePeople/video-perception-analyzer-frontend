@@ -9,6 +9,7 @@ import CategoriesList from "../components/CategoriesList";
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from "react-redux";
 import { setUserName, setSelectedCategories } from "../redux/actions";
+import { setUserCategories } from "../redux/actions";
 
 const Categories = () => {
   const [categoriesData, setCategoriesData] = useState(CategoriesData);
@@ -22,6 +23,7 @@ const Categories = () => {
   const {user} = storedCredentials ? storedCredentials : {};
   const {category} = useSelector(state=>state.userReducer);
   const {userinfo} = useSelector(state=>state.userReducer);
+  const dispatch = useDispatch();
 
 
   const navigateToHome = async () => {
@@ -41,9 +43,12 @@ const Categories = () => {
         fetch('http://165.22.179.123/users-api/preferences/', requestOptions)
         .then(response => {
           const json = response.json();
+          let users = JSON.parse(requestOptions.body)
+          dispatch(setUserCategories(users["user_categories"]))
           navigation.navigate('Home')
-        })
-      } catch (error) {
+          })
+        } 
+        catch (error) {
         console.error(error);
       }
     } else {
