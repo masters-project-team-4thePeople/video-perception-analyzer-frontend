@@ -38,7 +38,7 @@ const Categories = () => {
           user_categories: obj})
       };
       try {
-        fetch('http://68.183.20.147/users-api/preferences/', requestOptions)
+        fetch('http://165.22.179.123/users-api/preferences/', requestOptions)
         .then(response => {
           const json = response.json();
           navigation.navigate('Home')

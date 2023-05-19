@@ -23,7 +23,7 @@ const Welcome = () => {
 
   const loadUserCategoriesInfo = async () => {
     if(userinfo && userinfo[0] && userinfo[0].id) {
-    let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
+    let string = 'http://165.22.179.123/users-api/preferences?user_id=' + userinfo[0].id
       try {
         const response = await fetch(
           string

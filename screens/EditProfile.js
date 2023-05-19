@@ -25,7 +25,7 @@ const EditProfile = () => {
       headers: { 'Content-Type': 'application/json' }
     };
     try {
-      let string = 'http://68.183.20.147/videos-api/information?user_id=' + user_id
+      let string = 'http://165.22.179.123/videos-api/information?user_id=' + user_id
       const response = await fetch(string, requestOptions);
       const json = await response.json();
       // setFilesUploaded(json)

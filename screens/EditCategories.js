@@ -37,7 +37,7 @@ const EditCategories = () => {
   }, [])
 
   const addCatData = async () => {
-      let string = 'http://68.183.20.147/users-api/preferences?user_id=' + userinfo[0].id
+      let string = 'http://165.22.179.123/users-api/preferences?user_id=' + userinfo[0].id
       try {
         const response = await fetch(
           string
@@ -113,7 +113,7 @@ const EditCategories = () => {
         })
       };
       try {
-        const response = await fetch('http://68.183.20.147/users-api/preferences/', requestOptions);
+        const response = await fetch('http://165.22.179.123/users-api/preferences/', requestOptions);
         const json = await response.json();
         dispatch(setUserCategories([]))
         dispatch(setUserCategories(json["user_categories"]))

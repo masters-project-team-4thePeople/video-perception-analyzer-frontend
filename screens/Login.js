@@ -43,7 +43,7 @@ const Login = () => {
     }
 
     const fetchUserDetails = async () => {
-      let string = 'http://68.183.20.147/users-api/profile?username=' + username
+      let string = 'http://165.22.179.123/users-api/profile?username=' + username
       try {
         const response = await fetch(
           string

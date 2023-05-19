@@ -19,7 +19,7 @@ const callVideoMetaData = async (video_url, title, duration, userid) => {
     body: data
   };
   try {
-    const response = await fetch('http://68.183.20.147/videos-api/details/', requestOptions);
+    const response = await fetch('http://165.22.179.123/videos-api/details/', requestOptions);
     const json = await response.json();
     callInformationDetailsAddition(userid, json["video_id"])
   } catch (error) {
@@ -38,7 +38,7 @@ const callInformationDetailsAddition = async (user_id, video_id) => {
     body: data
   };
   try {
-    const response = await fetch('http://68.183.20.147/videos-api/information/', requestOptions);
+    const response = await fetch('http://165.22.179.123/videos-api/information/', requestOptions);
     const json = await response.json();
   } catch (error) {
     Alert.alert('Error occured while uploading')
@@ -61,7 +61,7 @@ export const uploadFile = async (file, userinfo, userid) => {
       body: data
     };
     try {
-      const response = await fetch('http://68.183.20.147/videos-api/spaces/', requestOptions);
+      const response = await fetch('http://165.22.179.123/videos-api/spaces/', requestOptions);
       const json = await response.json();
       callVideoMetaData(json["video_url"], file.assets[0].fileName, file.assets[0].duration, userid);
       Alert.alert('Your file has been uploaded successfully.')

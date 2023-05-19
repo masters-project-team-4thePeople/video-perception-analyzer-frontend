@@ -36,7 +36,7 @@ const SignUp = () => {
   const [date, setDate] = useState(new Date())
   const inputRef = useRef(null);
   const authCurr = getAuth();
-  const baseUrlProfile = "http://68.183.20.147/users-api/profile/";
+  const baseUrlProfile = "http://165.22.179.123/users-api/profile/";
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -103,7 +103,7 @@ const SignUp = () => {
         notification_id: '' })
     };
     try {
-      const response = await fetch('http://68.183.20.147/users-api/profile/', requestOptions);
+      const response = await fetch('http://165.22.179.123/users-api/profile/', requestOptions);
       const json = await response.json();
     } catch (error) {
       console.error(error);
